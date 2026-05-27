@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://0g3di4a3b2w"]
+
+[ext_resource type="Script" uid="uid://cf4bp5esfka7i" path="res://scenes/ui/gameui.gd" id="1_gnl4o"]
+[ext_resource type="PackedScene" uid="uid://doo5b7jm7x3y8" path="res://scenes/ui/board.tscn" id="1_jscc3"]
+[ext_resource type="PackedScene" uid="uid://dbdear076ofrm" path="res://scenes/ui/cell.tscn" id="3_wfbjo"]
+
+[node name="GameUI" type="CanvasLayer" unique_id=217149648]
+script = ExtResource("1_gnl4o")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1786013493]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=668532120]
+layout_mode = 2
+
+[node name="Board" parent="MarginContainer/HBoxContainer" unique_id=637133488 instance=ExtResource("1_jscc3")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1549296339]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NumberSelector" type="GridContainer" parent="MarginContainer/HBoxContainer/PanelContainer" unique_id=1908143308]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Cell" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=564498819 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell2" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=1405707704 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell3" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=157458186 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell4" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=1983294428 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell5" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=1447294246 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell6" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=2010190382 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell7" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=1722250695 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell8" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=1921807048 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="Cell9" parent="MarginContainer/HBoxContainer/PanelContainer/NumberSelector" unique_id=1555734812 instance=ExtResource("3_wfbjo")]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=228835721]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/PanelContainer2" unique_id=1834291366]
+layout_mode = 2
+text = "Number selection, timer, notes, stats, settings, etc."
