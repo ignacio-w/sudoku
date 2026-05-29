@@ -93,7 +93,8 @@ func _solve_recursive(sodoku_board: Array[Array]) -> bool:
 	return false
 
 
-## Check if the number at the specified row and col would be a valid placement
+## Check if the number at the specified row and col would be a valid placement.
+## The position we are checking MUST be empty for this to work.
 func is_valid_num(sodoku_board: Array[Array], row: int, col: int, num: int) -> bool:
 	
 	# We assume the spot on the board is empty
@@ -110,7 +111,9 @@ func is_valid_num(sodoku_board: Array[Array], row: int, col: int, num: int) -> b
 			return false
 	
 	# Check subgrid
+	@warning_ignore("integer_division")
 	var r: int = row / 3 * 3
+	@warning_ignore("integer_division")
 	var c: int = col / 3 * 3
 	for i in range(3):
 		for j in range(3):
@@ -166,3 +169,32 @@ func count_solutions(sodoku_board: Array[Array]) -> int:
 	
 	# Final return statement as described in function description
 	return solutions
+
+
+## Returns an array of all cells that need to be checked in order to determine
+## potential conflicts with the cell at the specified position. 
+static func get_potential_conflict_positions(pos: Vector2i) -> Array[Vector2i]:
+	var cell_positions: Array[Vector2i] = []
+	var row = pos.x
+	var col = pos.y
+	
+	# Appends the row and col
+	for i in range(9):
+		if i != col:
+			cell_positions.append(Vector2i(row, i))
+		if i != row:
+			cell_positions.append(Vector2i(i, col))
+	
+	# Append subgrid
+	@warning_ignore("integer_division")
+	var r: int = row / 3 * 3
+	@warning_ignore("integer_division")
+	var c: int = col / 3 * 3
+	for i in range(3):
+		for j in range(3):
+			# Don't add positions in the cell's row or col (they've already been added!)
+			if r + i != row and c + j != col:
+				cell_positions.append(Vector2i(r + i, c + j))
+	
+	return cell_positions
+	
