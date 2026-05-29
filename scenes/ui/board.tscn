@@ -1,7 +1,14 @@
 [gd_scene format=3 uid="uid://doo5b7jm7x3y8"]
 
 [ext_resource type="Script" uid="uid://ca2k7eo251ygv" path="res://scenes/ui/board.gd" id="1_ef52f"]
-[ext_resource type="PackedScene" uid="uid://dbdear076ofrm" path="res://scenes/ui/cell.tscn" id="1_j4jdf"]
+[ext_resource type="PackedScene" uid="uid://csn5uij01jy01" path="res://scenes/ui/sub_grid.tscn" id="2_uhup1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knlcq"]
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
 
 [node name="Board" type="MarginContainer" unique_id=1119244381]
 offset_right = 40.0
@@ -13,115 +20,42 @@ theme_override_constants/margin_top = 1
 theme_override_constants/margin_right = 1
 theme_override_constants/margin_bottom = 1
 script = ExtResource("1_ef52f")
-cell = ExtResource("1_j4jdf")
 board = Array[Array]([[0, 6, 0, 0, 0, 0, 0, 0, 5], [7, 5, 1, 8, 6, 4, 2, 3, 0], [9, 3, 4, 5, 1, 2, 0, 6, 7], [0, 0, 0, 2, 9, 5, 3, 8, 0], [0, 0, 0, 7, 4, 0, 0, 5, 0], [0, 0, 0, 6, 3, 1, 7, 4, 2], [3, 9, 0, 1, 8, 7, 6, 2, 4], [6, 0, 2, 3, 5, 9, 1, 7, 8], [8, 1, 0, 0, 0, 6, 5, 0, 3]])
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1438018810]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=726936825]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_knlcq")
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="." unique_id=1253530888]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer" unique_id=1823923968]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="SodokuGrid" type="GridContainer" parent="AspectRatioContainer/MarginContainer" unique_id=925403689]
+[node name="SodokuGrid" type="GridContainer" parent="PanelContainer" unique_id=925403689]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-columns = 9
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 3
 
-[node name="Cell" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1571922791 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid" parent="PanelContainer/SodokuGrid" unique_id=1508803001 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell2" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1849366311 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid2" parent="PanelContainer/SodokuGrid" unique_id=860411082 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell3" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1552479944 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid3" parent="PanelContainer/SodokuGrid" unique_id=517724373 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell4" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1896282372 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid4" parent="PanelContainer/SodokuGrid" unique_id=2123392820 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell5" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=2081738204 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid5" parent="PanelContainer/SodokuGrid" unique_id=27543225 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell6" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1082318481 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid6" parent="PanelContainer/SodokuGrid" unique_id=221543946 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell7" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=604798683 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid7" parent="PanelContainer/SodokuGrid" unique_id=1593601430 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell8" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1678026060 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid8" parent="PanelContainer/SodokuGrid" unique_id=1803709611 instance=ExtResource("2_uhup1")]
 layout_mode = 2
 
-[node name="Cell9" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1619630064 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell10" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=525074924 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell11" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=270550950 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell12" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=646331148 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell13" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1442880714 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell14" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1812321993 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell15" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1462911699 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell16" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=879753644 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell17" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=426750597 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell18" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1182821829 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell19" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=159705531 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell20" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1807515877 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell21" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1729548796 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell22" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=142191455 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell23" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=775658608 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell24" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1516350019 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell25" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=968513781 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell26" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1089447903 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell27" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1097981778 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell28" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=44963903 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell29" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1522261875 instance=ExtResource("1_j4jdf")]
-layout_mode = 2
-
-[node name="Cell30" parent="AspectRatioContainer/MarginContainer/SodokuGrid" unique_id=1778331947 instance=ExtResource("1_j4jdf")]
+[node name="SubGrid9" parent="PanelContainer/SodokuGrid" unique_id=1059705019 instance=ExtResource("2_uhup1")]
 layout_mode = 2
