@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cf4bp5esfka7i" path="res://scenes/ui/gameui.gd" id="1_gnl4o"]
 [ext_resource type="PackedScene" uid="uid://doo5b7jm7x3y8" path="res://scenes/ui/board.tscn" id="1_jscc3"]
-[ext_resource type="PackedScene" uid="uid://dbdear076ofrm" path="res://scenes/ui/cell.tscn" id="3_wfbjo"]
+[ext_resource type="PackedScene" uid="uid://lvsotrxoqrq6" path="res://scenes/ui/number_button.tscn" id="3_nqx3d"]
 
 [node name="GameUI" type="CanvasLayer" unique_id=217149648]
 script = ExtResource("1_gnl4o")
@@ -38,35 +38,36 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="NumberSelector" type="GridContainer" parent="MarginContainer/HBoxContainer/SelectorPanelContainer" unique_id=1908143308]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Cell" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=564498819 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=7488472 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell2" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1405707704 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton2" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1655204838 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell3" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=157458186 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton3" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1457734819 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell4" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1983294428 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton4" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1546039430 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell5" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1447294246 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton5" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1473690151 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell6" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=2010190382 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton6" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=453907866 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell7" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1722250695 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton7" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1982038624 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell8" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1921807048 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton8" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1125424251 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="Cell9" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1555734812 instance=ExtResource("3_wfbjo")]
+[node name="NumberButton9" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/NumberSelector" unique_id=1201367247 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
 [node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=228835721]

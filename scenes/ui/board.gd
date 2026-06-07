@@ -18,6 +18,8 @@ func clear():
 	
 
 
+# Creates the board to be displayed on screen. The sodoku board is a 2D array of numbers where
+# each number represents what should be displayed on the board. 0 = NOTHING, 1-9 = 1-9
 func create_visual_board(sodoku_board: Array[Array]):
 	clear()
 	await get_tree().process_frame
@@ -62,7 +64,7 @@ func _on_cell_selected(selected_cell: Cell):
 			assert(cell is Cell) # for debugging purposes
 			if cell == selected_cell:
 				(cell as Cell).set_state(Cell.CellState.SELECTED)
-			elif (cell as Cell).board_pos in conflict_positions:
+			elif (cell as Cell).board_pos in conflict_positions and (cell as Cell).value != 0:
 				(cell as Cell).set_state(Cell.CellState.CONFLICT_HIGHLIGHT)
 			else:
 				cell.set_state()

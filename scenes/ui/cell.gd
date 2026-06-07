@@ -26,6 +26,8 @@ signal reset_highlight
 func _init() -> void:
 	is_clue = false
 	state = CellState.DEFAULT
+	
+	# Create styleboxes
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("361a1a")
 	style.set_border_width_all(2)
@@ -48,11 +50,13 @@ func _ready() -> void:
 func _on_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_select"):
 		print("cell clicked with value ", number.text, " and is clue: ", is_clue)
+		# Cells that aren't clues can be SELECTED (filled)
 		if not is_clue:
 			if state != CellState.SELECTED:
 				cell_selected.emit(self)
 			else:
 				reset_highlight.emit()
+		# Cells that are clues can only be highlighted
 		else:
 			if state != CellState.NUM_HIGHLIGHT:
 				cell_highlighted.emit(self)
@@ -78,6 +82,15 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 	else:
 		number.text = str(clue)
 		is_clue = true
+
+
+## Sets the value of the cell to the given number. Use this for user
+## input.
+func set_value(num: int) -> void:
+	value = num
+	number.remove_theme_color_override("font_color")
+	number.add_theme_color_override("font_color", Color.ROYAL_BLUE)
+	number.text = str(value)
 
 
 ## Changes the stylebox if selected
