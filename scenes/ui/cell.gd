@@ -6,6 +6,7 @@ class_name Cell
 const EMPTY = ""
 enum CellState {DEFAULT, SELECTED, NUM_HIGHLIGHT, CONFLICT_HIGHLIGHT}
 
+var font_ratio: float # font size / cell size; for future use
 var is_clue: bool
 var state: CellState
 var value: int
@@ -15,6 +16,7 @@ var cell_styles: Dictionary[String, StyleBoxFlat]
 
 signal cell_highlighted(cell: Cell)
 signal cell_selected(cell: Cell)
+signal cell_value_changed(cell: Cell)
 signal reset_highlight
 # TODO: Cell selection
 # - Highlight cell
@@ -42,6 +44,7 @@ func _init() -> void:
 	cell_styles["num_highlight"] = style.duplicate(true)
 
 func _ready() -> void:
+	font_ratio = number.get_theme_font_size("font_size") / size.y
 	number.text = EMPTY
 	cell_styles["default"] = get_theme_stylebox("panel")
 
@@ -62,15 +65,18 @@ func _on_gui_input(event: InputEvent) -> void:
 				cell_highlighted.emit(self)
 			else:
 				reset_highlight.emit()
-		
 
 
-## Forces the cell to be square when the resized signal is emitted
-func _force_square() -> void:
-	if size.x > size.y:
-		custom_minimum_size.y = size.x
-	else:
-		custom_minimum_size.x = size.y
+## Sets the value of a selected cell to the player's keyboard input.
+func _unhandled_key_input(event: InputEvent) -> void:
+	if state != CellState.SELECTED: return
+	
+	var key_event = event as InputEventKey
+	if event.is_pressed() and not event.is_echo():
+		if key_event.unicode != 0:
+			var num = int(char(key_event.unicode))
+			if num != 0:
+				set_value(num)
 
 
 ## Sets the value of the cell to the given clue
@@ -91,6 +97,7 @@ func set_value(num: int) -> void:
 	number.remove_theme_color_override("font_color")
 	number.add_theme_color_override("font_color", Color.ROYAL_BLUE)
 	number.text = str(value)
+	cell_value_changed.emit(self)
 
 
 ## Changes the stylebox if selected

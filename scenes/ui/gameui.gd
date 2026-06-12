@@ -5,18 +5,15 @@ extends CanvasLayer
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
 
 func _ready() -> void:
-	pass
+	for child in number_selector.get_children():
+		child.queue_free()
 
 
-# Creates a Sodoku board visually given a Sodoku board. The Sodoku board is
-# exactly what should be reflected at the start of the game. The given board
-# is not a solved, solution board.
-func reflect(board_array: Array[Array]) -> void:
-	board.create_visual_board(board_array)
-
-
-## Creates the number buttons used to input numbers into the Sodoku board
-func setup():
+## Sets up all visual nodes. Creates a visual Sodoku board given a 2D Array of numbers
+## representing the board. The Sodoku board should be exactly what is reflected
+## at the start of the game. The given board should not a solved, solution board.
+## Also creates the number buttons used to input numbers into the Sodoku board
+func setup(board_array: Array[Array]):
 	for child in number_selector.get_children():
 		child.queue_free()
 	
@@ -25,6 +22,12 @@ func setup():
 		number_selector.add_child(num_button)
 		num_button.set_value(num)
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
+	
+	board.create_visual_board(board_array)
+	# Once everything has been created, update the board size to take
+	# up available space on screen
+	#await get_tree().process_frame
+	#await board.resize_elements()
 
 
 ## Receives the number button clicked signal from number buttons. The argument
@@ -32,5 +35,8 @@ func setup():
 func _on_num_button_clicked(num: int) -> void:
 	print("Received signal")
 	# Get selected cell
+	var cell: Cell = board.focused_cell
+	if cell == null or cell.is_clue: return
 	
 	# Put value in selected cell
+	cell.set_value(num)

@@ -2,20 +2,20 @@ extends MarginContainer
 
 @onready var sodoku_grid: GridContainer = %SodokuGrid
 
-@export var board: Array[Array] # for testing only
+@export var board: Array[Array] # for testing only; 2D array of numbers
 
 const CELL = preload("uid://dbdear076ofrm")
 const SUB_GRID = preload("uid://csn5uij01jy01")
-var cell_grid: Array[Array]
+var cell_grid: Array[Array] # 2D Array of cell refrences
+var focused_cell: Cell
 
 func _ready() -> void:
-	pass
+	clear()
 
 
 func clear():
 	for grid in sodoku_grid.get_children():
 		grid.queue_free()
-	
 
 
 # Creates the board to be displayed on screen. The sodoku board is a 2D array of numbers where
@@ -48,14 +48,18 @@ func create_visual_board(sodoku_board: Array[Array]):
 			new_cell.set_clue(sodoku_board[row][col], Vector2i(row, col))
 
 
-
+## Takes a cell position ((0, 0) to (8, 8)) and returns the index of the subgrid
+## the position is in from 0 to 8. 
 func get_subgrid_index(pos: Vector2i) -> int:
 	@warning_ignore("integer_division")
 	return (pos.x / 3) * 3 + (pos.y / 3)
 
 
+## Receives the cell selected signal from board cells and updates all other cells as
+## necessary.
 func _on_cell_selected(selected_cell: Cell):
 	print("Recieved signal from cell at ", str(selected_cell.board_pos))
+	focused_cell = selected_cell
 	var conflict_positions = Sodoku.get_potential_conflict_positions(selected_cell.board_pos)
 	
 	# Highlight potential conflicts, and set all other cells to default
@@ -70,8 +74,12 @@ func _on_cell_selected(selected_cell: Cell):
 				cell.set_state()
 
 
+## Receives the cell highlighted signal from board cells and updates all other cells as
+## necessary.
 func _on_cell_highlighted(selected_cell: Cell):
 	var num := selected_cell.value
+	focused_cell = selected_cell
+	
 	# Get idential numbers
 	for row in cell_grid:
 		for cell in row:
@@ -82,8 +90,10 @@ func _on_cell_highlighted(selected_cell: Cell):
 				cell.set_state()
 
 
+## Resets the highlighting of all cells in the grid.
 func clear_highlights():
 	for row in cell_grid:
 		for cell in row:
 			assert(cell is Cell)
 			(cell as Cell).set_state()
+	focused_cell = null
