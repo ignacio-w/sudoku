@@ -5,6 +5,7 @@ extends CanvasLayer
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
 
 func _ready() -> void:
+	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	for child in number_selector.get_children():
 		child.queue_free()
 
@@ -24,10 +25,6 @@ func setup(board_array: Array[Array]):
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
 	
 	board.create_visual_board(board_array)
-	# Once everything has been created, update the board size to take
-	# up available space on screen
-	#await get_tree().process_frame
-	#await board.resize_elements()
 
 
 ## Receives the number button clicked signal from number buttons. The argument
@@ -40,3 +37,18 @@ func _on_num_button_clicked(num: int) -> void:
 	
 	# Put value in selected cell
 	cell.set_value(num)
+
+
+## Receives the cell_value_changed signal from the GameEvents autoload (cells).
+## This should only be used if the board doesn't allow incorrect inputs so
+## number inputs are not disabled when the player actually needs them.
+func _on_cell_value_changed(cell_changed: Cell) -> void:
+	# Check if there are 9 of the selected number already in the board
+	var num_count: int = 0
+	for row in board.cell_grid:
+		for cell in row:
+			if (cell as Cell).value == cell_changed.value:
+				num_count += 1
+			if num_count == 9:
+				number_selector.get_children()[cell_changed.value - 1].set_inactive()
+				return
