@@ -8,8 +8,11 @@ enum Difficulty {EASY, NORMAL, HARD}
 ## Creates a new game
 func new_game(difficulty: Difficulty = Difficulty.EASY):
 	num_board = _make_puzzle(difficulty)
-	for row in num_board:
-		print(row)
+	solution_board = solve(num_board)
+	print_board(num_board)
+	
+	print("Solution board shown:")
+	print_board(solution_board)
 
 
 ## Creates and returns a Sodoku puzzle with a given difficulty.
@@ -54,8 +57,8 @@ func _make_puzzle(difficulty: int) -> Array[Array]:
 
 
 ## Given a sodoku board, a new solved board is returned or null if there is no
-## solution. If instead you want to directly solve the given board, use
-## _solve_recursive().
+## solution. If instead you want to directly create a solution from a given
+## board, use _solve_recursive().
 func solve(sodoku_board: Array[Array]):
 	var copy = sodoku_board.duplicate(true)
 	if _solve_recursive(copy):
@@ -63,7 +66,8 @@ func solve(sodoku_board: Array[Array]):
 	return null
 
 
-## Completly solves a given sodoku board. This function will directly modify
+## Completly solves a given sodoku board by filling the board with random
+## numbers until a solution is found. This function will directly modify
 ## the given sodoku board. If instead you want a solved copy returned,
 ## use solve().
 func _solve_recursive(sodoku_board: Array[Array]) -> bool:
@@ -80,10 +84,10 @@ func _solve_recursive(sodoku_board: Array[Array]) -> bool:
 	number_range.shuffle()
 	
 	for num in number_range:
-		# Test numbers until a valid number is found
+		# Test each number until a solution (or lack thereof) is determined
 		if is_valid_num(sodoku_board, row, col, num):
 			sodoku_board[row][col] = num
-			# Recursively call function until board is completly solved
+			# Check to see if a solution can be found after placing this num
 			if _solve_recursive(sodoku_board):
 				return true
 			# When board is unsolvable, reset value and continue testing values
@@ -171,6 +175,12 @@ func count_solutions(sodoku_board: Array[Array]) -> int:
 	return solutions
 
 
+## Prints the given board in an easy to see way
+func print_board(board: Array[Array]) -> void:
+	for row in board:
+		print(row)
+
+
 ## Returns an array of all cells that need to be checked in order to determine
 ## potential conflicts with the cell at the specified position. 
 static func get_potential_conflict_positions(pos: Vector2i) -> Array[Vector2i]:
@@ -197,4 +207,3 @@ static func get_potential_conflict_positions(pos: Vector2i) -> Array[Vector2i]:
 				cell_positions.append(Vector2i(r + i, c + j))
 	
 	return cell_positions
-	
