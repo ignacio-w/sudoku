@@ -16,7 +16,6 @@ var cell_styles: Dictionary[String, StyleBoxFlat]
 
 signal cell_highlighted(cell: Cell)
 signal cell_selected(cell: Cell)
-signal cell_value_changed(cell: Cell)
 signal reset_highlight
 # TODO: Cell selection
 # - Highlight cell
@@ -73,8 +72,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	
 	var key_event = event as InputEventKey
 	if event.is_pressed() and not event.is_echo():
+		# Unicode == 0 if key doesn't produce anything (ex. esc)
 		if key_event.unicode != 0:
 			var num = int(char(key_event.unicode))
+			# num == 0 if key pressed is 0 or not a number
 			if num != 0:
 				set_value(num)
 
@@ -97,7 +98,7 @@ func set_value(num: int) -> void:
 	number.remove_theme_color_override("font_color")
 	number.add_theme_color_override("font_color", Color.ROYAL_BLUE)
 	number.text = str(value)
-	cell_value_changed.emit(self)
+	GameEvents.emit_cell_value_changed(self)
 
 
 ## Changes the stylebox if selected
