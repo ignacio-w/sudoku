@@ -28,15 +28,39 @@ func setup(board_array: Array[Array]):
 
 
 ## Receives the number button clicked signal from number buttons. The argument
-## represents the number the button represents.
-func _on_num_button_clicked(num: int) -> void:
+## is the number button that emitted the signal. Checks if button is disabled
+## before setting the value of the focused cell.
+func _on_num_button_clicked(num_button: NumberButton) -> void:
 	print("Received signal")
-	# Get selected cell
-	var cell: Cell = board.focused_cell
-	if cell == null or cell.is_clue: return
 	
-	# Put value in selected cell
-	cell.set_value(num)
+	# Get selected cell (if any)
+	var f_cell: Cell = board.focused_cell
+	# Make sure focused cell is able to accept input
+	if f_cell == null or f_cell.is_clue: return
+	
+	# Check if number button is disabled
+	if num_button.is_enabled:
+		# Put value in selected cell
+		f_cell.set_value(num_button.value)
+
+
+## Sets the value of a selected cell to the player's keyboard input. Handles
+## checks to see if the number can be placed.
+func _unhandled_key_input(event: InputEvent) -> void:
+	var cell: Cell = board.focused_cell
+	if cell == null or cell.state != Cell.CellState.SELECTED: return
+	if not event.is_pressed() or event.is_echo(): return
+	
+	var key_event = event as InputEventKey
+	var num = int(char(key_event.unicode)) # 0 if 0 or not a number
+	if num != 0:
+		# Get corresponding number button; check if enabled to place
+		for button in number_selector.get_children():
+			if (button as NumberButton).value == num:
+				if (button as NumberButton).is_enabled:
+					cell.set_value(num)
+				break
+		get_viewport().set_input_as_handled()
 
 
 ## Receives the cell_value_changed signal from the GameEvents autoload (cells).

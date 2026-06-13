@@ -66,18 +66,18 @@ func _on_gui_input(event: InputEvent) -> void:
 				reset_highlight.emit()
 
 
-## Sets the value of a selected cell to the player's keyboard input.
-func _unhandled_key_input(event: InputEvent) -> void:
-	if state != CellState.SELECTED: return
-	
-	var key_event = event as InputEventKey
-	if event.is_pressed() and not event.is_echo():
-		# Unicode == 0 if key doesn't produce anything (ex. esc)
-		if key_event.unicode != 0:
-			var num = int(char(key_event.unicode))
-			# num == 0 if key pressed is 0 or not a number
-			if num != 0:
-				set_value(num)
+### Sets the value of a selected cell to the player's keyboard input.
+#func _unhandled_key_input(event: InputEvent) -> void:
+	#if state != CellState.SELECTED: return
+	#
+	#var key_event = event as InputEventKey
+	#if event.is_pressed() and not event.is_echo():
+		## Unicode == 0 if key doesn't produce anything (ex. esc)
+		#if key_event.unicode != 0:
+			#var num = int(char(key_event.unicode))
+			## num == 0 if key pressed is 0 or not a number
+			#if num != 0:
+				#set_value(num)
 
 
 ## Sets the value of the cell to the given clue

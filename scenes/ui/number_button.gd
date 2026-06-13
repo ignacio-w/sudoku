@@ -1,12 +1,12 @@
 extends PanelContainer
 class_name NumberButton
 
-@onready var number: Label = %Number
+@onready var number_label: Label = %Number
 
 var value: int
-var is_enabled: bool
+var is_enabled: bool # Purely cosmetic, doesn't change functionality
 
-signal number_button_clicked(num: int)
+signal number_button_clicked(num: NumberButton)
 
 
 func _ready() -> void:
@@ -15,16 +15,16 @@ func _ready() -> void:
 
 func set_value(val: int) -> void:
 	value = val
-	number.text = str(value)
+	number_label.text = str(value)
 
 
 ## Set the button to inactive or active
 func set_inactive(inactive: bool = true):
 	is_enabled = not inactive
 	if is_enabled:
-		number.remove_theme_color_override("font_color")
+		number_label.remove_theme_color_override("font_color")
 	else:
-		number.add_theme_color_override("font_color", Color.DIM_GRAY)
+		number_label.add_theme_color_override("font_color", Color.DIM_GRAY)
 
 
 ## Forces the cell to be square when the resized signal is emitted
@@ -37,6 +37,6 @@ func _force_square() -> void:
 
 ## Receives GUI input events
 func _on_gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_select") and is_enabled:
+	if event.is_action_pressed("ui_select"):
 		print("Number input received! ", str(value))
-		number_button_clicked.emit(value)
+		number_button_clicked.emit(self)
