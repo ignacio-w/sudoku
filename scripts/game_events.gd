@@ -8,7 +8,6 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 
-## Called by cells when the value inside of them changes. Currently sends to
-## Main.
+## Called by cells when the value inside of them changes.
 func emit_cell_value_changed(cell: Cell):
 	cell_value_changed.emit(cell)

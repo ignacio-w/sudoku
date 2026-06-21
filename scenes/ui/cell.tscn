@@ -15,11 +15,11 @@ corner_radius_bottom_left = 5
 
 [sub_resource type="LabelSettings" id="LabelSettings_yh0nt"]
 line_spacing = -2.0
-font_size = 10
+font_size = 14
 font_color = Color(0.66, 0.66, 0.66, 1)
 
 [node name="Cell" type="PanelContainer" unique_id=7488472]
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(60, 60)
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_yh0nt")
@@ -34,7 +34,7 @@ theme_override_constants/margin_right = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 39
 text = "9"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -50,78 +50,96 @@ columns = 3
 [node name="Label" type="Label" parent="MarginContainer/NotesContainer" unique_id=958222668]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "1"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="MarginContainer/NotesContainer" unique_id=632856350]
+[node name="Label2" type="Label" parent="MarginContainer/NotesContainer" unique_id=493992127]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "2"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label3" type="Label" parent="MarginContainer/NotesContainer" unique_id=788235586]
+[node name="Label3" type="Label" parent="MarginContainer/NotesContainer" unique_id=765701669]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "3"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label4" type="Label" parent="MarginContainer/NotesContainer" unique_id=1130420351]
+[node name="Label4" type="Label" parent="MarginContainer/NotesContainer" unique_id=1664336624]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "4"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label5" type="Label" parent="MarginContainer/NotesContainer" unique_id=1681202304]
+[node name="Label5" type="Label" parent="MarginContainer/NotesContainer" unique_id=811348541]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "5"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label6" type="Label" parent="MarginContainer/NotesContainer" unique_id=695268365]
+[node name="Label6" type="Label" parent="MarginContainer/NotesContainer" unique_id=1377797044]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "6"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label7" type="Label" parent="MarginContainer/NotesContainer" unique_id=355131879]
+[node name="Label7" type="Label" parent="MarginContainer/NotesContainer" unique_id=343124412]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "7"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label8" type="Label" parent="MarginContainer/NotesContainer" unique_id=2134131570]
+[node name="Label8" type="Label" parent="MarginContainer/NotesContainer" unique_id=11761589]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "8"
 label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label9" type="Label" parent="MarginContainer/NotesContainer" unique_id=357424735]
+[node name="Label9" type="Label" parent="MarginContainer/NotesContainer" unique_id=824881561]
 texture_filter = 1
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/line_spacing = -3
 text = "9"
 label_settings = SubResource("LabelSettings_yh0nt")

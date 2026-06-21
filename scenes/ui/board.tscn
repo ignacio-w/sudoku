@@ -4,11 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://csn5uij01jy01" path="res://scenes/ui/sub_grid.tscn" id="2_uhup1"]
 
 [node name="Board" type="MarginContainer" unique_id=1119244381]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 386.0
+offset_bottom = 386.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/margin_left = 1

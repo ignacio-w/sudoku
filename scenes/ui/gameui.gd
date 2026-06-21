@@ -2,9 +2,15 @@ extends CanvasLayer
 
 @onready var board: MarginContainer = %Board
 @onready var number_selector: GridContainer = %NumberSelector
+@onready var strike_number: Label = %StrikeNumber
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
 
+var strikes: int
+signal number_input(board_pos: Vector2i, num: int)
+
 func _ready() -> void:
+	strikes = 0
+	strike_number.text = str(strikes)
 	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	for child in number_selector.get_children():
 		child.queue_free()
@@ -27,40 +33,34 @@ func setup(board_array: Array[Array]):
 	board.create_visual_board(board_array)
 
 
+func increment_strikes():
+	strikes += 1
+	strike_number.text = str(strikes)
+
+
+
 ## Receives the number button clicked signal from number buttons. The argument
-## is the number button that emitted the signal. Checks if button is disabled
-## before setting the value of the focused cell.
+## is the number button that emitted the signal. Sends input to game to
+## determine how to handle input.
 func _on_num_button_clicked(num_button: NumberButton) -> void:
 	print("Received signal")
 	
-	# Get selected cell (if any)
-	var f_cell: Cell = board.focused_cell
-	# Make sure focused cell is able to accept input
-	if f_cell == null or f_cell.is_clue: return
+	var focused_cell: Cell = board.focused_cell
+	
+	# Check if a cell is foucsed
+	if focused_cell == null: return
+	
+	var board_pos: Vector2i = focused_cell.board_pos
+	var num: int = num_button.value
+	## Tell game to handle input; emit a signal to Game
+	number_input.emit(board_pos, num)
+	## Delete everything below
+	
 	
 	# Check if number button is disabled
 	if num_button.is_enabled:
 		# Put value in selected cell
-		f_cell.set_value(num_button.value)
-
-
-## Sets the value of a selected cell to the player's keyboard input. Handles
-## checks to see if the number can be placed.
-func _unhandled_key_input(event: InputEvent) -> void:
-	var cell: Cell = board.focused_cell
-	if cell == null or cell.state != Cell.CellState.SELECTED: return
-	if not event.is_pressed() or event.is_echo(): return
-	
-	var key_event = event as InputEventKey
-	var num = int(char(key_event.unicode)) # 0 if 0 or not a number
-	if num != 0:
-		# Get corresponding number button; check if enabled to place
-		for button in number_selector.get_children():
-			if (button as NumberButton).value == num:
-				if (button as NumberButton).is_enabled:
-					cell.set_value(num)
-				break
-		get_viewport().set_input_as_handled()
+		focused_cell.set_value(num_button.value)
 
 
 ## Receives the cell_value_changed signal from the GameEvents autoload (cells).

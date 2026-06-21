@@ -7,7 +7,7 @@ extends MarginContainer
 const CELL = preload("uid://dbdear076ofrm")
 const SUB_GRID = preload("uid://csn5uij01jy01")
 var cell_grid: Array[Array] # 2D Array of cell refrences
-var focused_cell: Cell
+var focused_cell: Cell # The last cell currently highlighted and clicked on by user
 
 func _ready() -> void:
 	clear()
@@ -20,10 +20,10 @@ func clear():
 
 # Creates the board to be displayed on screen. The sodoku board is a 2D array of numbers where
 # each number represents what should be displayed on the board. 0 = NOTHING, 1-9 = 1-9
-func create_visual_board(sodoku_board: Array[Array]):
+func create_visual_board(sudoku_board: Array[Array]):
 	clear()
 	await get_tree().process_frame
-	board = sodoku_board
+	board = sudoku_board
 	cell_grid = []
 	# Create subgrids
 	for grid_i in range(9):
@@ -45,7 +45,7 @@ func create_visual_board(sodoku_board: Array[Array]):
 			new_cell.cell_selected.connect(_on_cell_selected)
 			new_cell.cell_highlighted.connect(_on_cell_highlighted)
 			new_cell.reset_highlight.connect(clear_highlights)
-			new_cell.set_clue(sodoku_board[row][col], Vector2i(row, col))
+			new_cell.set_clue(sudoku_board[row][col], Vector2i(row, col))
 
 
 ## Takes a cell position ((0, 0) to (8, 8)) and returns the index of the subgrid
@@ -60,7 +60,7 @@ func get_subgrid_index(pos: Vector2i) -> int:
 func _on_cell_selected(selected_cell: Cell):
 	print("Recieved signal from cell at ", str(selected_cell.board_pos))
 	focused_cell = selected_cell
-	var conflict_positions = Sodoku.get_potential_conflict_positions(selected_cell.board_pos)
+	var conflict_positions = Sudoku.get_potential_conflict_positions(selected_cell.board_pos)
 	
 	# Highlight potential conflicts, and set all other cells to default
 	for row in cell_grid:
@@ -76,9 +76,9 @@ func _on_cell_selected(selected_cell: Cell):
 
 ## Receives the cell highlighted signal from board cells and updates all other cells as
 ## necessary.
-func _on_cell_highlighted(selected_cell: Cell):
-	var num := selected_cell.value
-	focused_cell = selected_cell
+func _on_cell_highlighted(highlighted_cell: Cell):
+	var num := highlighted_cell.value
+	focused_cell = highlighted_cell
 	
 	# Get idential numbers
 	for row in cell_grid:
