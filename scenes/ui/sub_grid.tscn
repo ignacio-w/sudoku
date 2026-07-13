@@ -9,7 +9,7 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
+border_color = Color(0, 0.20966662, 0.34, 1)
 
 [node name="SubGrid" type="PanelContainer" unique_id=1508803001]
 theme_override_styles/panel = SubResource("StyleBoxFlat_uhup1")
