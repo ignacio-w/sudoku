@@ -6,7 +6,7 @@ class_name GameUI extends CanvasLayer
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
 
 var strikes: int
-signal num_input_requested(board_pos: Vector2i, num: int)
+signal num_input_requested(cell: Cell, num: int)
 
 func _ready() -> void:
 	strikes = 0
@@ -53,10 +53,9 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 	# Check if cell is empty
 	if focused_cell.value != 0: return
 	
-	var board_pos: Vector2i = focused_cell.board_pos
 	var num: int = num_button.value
-	# Request Game to input number
-	num_input_requested.emit(board_pos, num)
+	# Send Game an input request
+	num_input_requested.emit(focused_cell, num)
 	
 	# TODO Delete everything below, let game parent control when to set value
 	
@@ -67,8 +66,9 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 
 
 ## Receives the cell_value_changed signal from the GameEvents autoload (cells).
-## This should only be used if the board doesn't allow incorrect inputs so
-## number inputs are not disabled when the player actually needs them.
+## Disables number input buttons when 9 of the number are found on the board.
+## NOTICE: This should only be used if the board doesn't allow incorrect inputs 
+## so number inputs are not disabled when the player actually needs them.
 func _on_cell_value_changed(cell_changed: Cell) -> void:
 	# Check if there are 9 of the selected number already in the board
 	var num_count: int = 0
