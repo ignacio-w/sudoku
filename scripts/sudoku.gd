@@ -1,16 +1,19 @@
 class_name Sudoku extends RefCounted
 
-var num_board: Array[Array]
+var player_board: Array[Array]
 var solution_board: Array[Array]
 enum Difficulty {EASY, NORMAL, HARD}
 
+## TODO: Add settings, modes, etc. (ex: Validate input?)
+## Extend class to create new Sodoku modes?
+## NOTICE: For now, game is 9x9 regular sodoku where every input is checked
 
 ## Creates a new game with a given difficulty. Creates a board, solution,
-## then prints the board.
+## then prints the board. 
 func new_game(difficulty: Difficulty = Difficulty.EASY):
-	num_board = _make_puzzle(difficulty)
-	solution_board = solve(num_board)
-	print_board(num_board)
+	player_board = _make_puzzle(difficulty)
+	solution_board = solve(player_board)
+	print_board(player_board)
 	
 	print("Solution board shown:")
 	print_board(solution_board)
@@ -132,7 +135,7 @@ func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: int) -> b
 
 ## Checks if the requested input matches the solution board.
 func is_solution(row: int, col: int, num: int) -> bool:
-	if num_board[row][col] == solution_board[row][col]:
+	if num == solution_board[row][col]:
 		return true
 	return false
 
@@ -150,7 +153,7 @@ func find_empty_cell(sudoku_board: Array[Array]) -> Vector2i:
 ## Counts the number of solutions available from a partially filled board by
 ## attempting to recurisvely solve the board. This function attempts to answer
 ## the question, "Does the puzzle have exactly 1 solution?".
-## Returns 0 if there are no solutions to the board (invalid number placement),
+## Returns 0 if there are no solutions to the board (invalid placement),
 ## 1 if there is only 1 solution, and a number greater than 1 if the solution to
 ## the board is ambiguous (may not be actual number of solutions).
 func count_solutions(sudoku_board: Array[Array]) -> int:

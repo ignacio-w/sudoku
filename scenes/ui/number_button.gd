@@ -18,6 +18,7 @@ func _ready() -> void:
 	styleboxes["clicked"] = stylebox
 
 
+## Sets the number that this button should represent
 func set_value(val: int) -> void:
 	value = val
 	number_label.text = str(value)
@@ -48,8 +49,9 @@ func _on_gui_input(event: InputEvent) -> void:
 		number_button_clicked.emit(self)
 
 
-## When a valid number key is pressed, emits the number_button_clicked signal
-## as if they had selected a number button.
+## Handles keyboard input. If a key equal to the number this represents is
+## pressed, emit the number_button_clicked signal as if the user had clicked
+## this button.
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo(): return
 	
@@ -61,11 +63,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+## Changes stylebox on mouse hover.
 func _on_mouse_entered() -> void:
 	remove_theme_stylebox_override("panel")
 	add_theme_stylebox_override("panel", styleboxes["clicked"])
 
-
+## Changes stylebox on mouse exit.
 func _on_mouse_exited() -> void:
 	remove_theme_stylebox_override("panel")
 	add_theme_stylebox_override("panel", styleboxes["default"])

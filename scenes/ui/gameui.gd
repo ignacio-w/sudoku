@@ -1,4 +1,4 @@
-extends CanvasLayer
+class_name GameUI extends CanvasLayer
 
 @onready var board: MarginContainer = %Board
 @onready var number_selector: GridContainer = %NumberSelector
@@ -6,7 +6,7 @@ extends CanvasLayer
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
 
 var strikes: int
-signal number_input(board_pos: Vector2i, num: int)
+signal num_input_requested(board_pos: Vector2i, num: int)
 
 func _ready() -> void:
 	strikes = 0
@@ -28,6 +28,7 @@ func setup(board_array: Array[Array]):
 		var num_button = NUMBER_BUTTON.instantiate()
 		number_selector.add_child(num_button)
 		num_button.set_value(num)
+		# Connect the number_button_clicked signal to function in this node.
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
 	
 	board.create_visual_board(board_array)
@@ -40,27 +41,29 @@ func increment_strikes():
 
 
 ## Receives the number button clicked signal from number buttons. The argument
-## is the number button that emitted the signal. Sends input to game to
-## determine how to handle input.
+## is the number button that emitted the signal. Sends input along with
+## focused_cell to game to determine how to handle input.
 func _on_num_button_clicked(num_button: NumberButton) -> void:
-	print("Received signal")
+	print("Received number button signal")
 	
 	var focused_cell: Cell = board.focused_cell
 	
 	# Check if a cell is foucsed
 	if focused_cell == null: return
+	# Check if cell is empty
+	if focused_cell.value != 0: return
 	
 	var board_pos: Vector2i = focused_cell.board_pos
 	var num: int = num_button.value
-	## Tell game to handle input; emit a signal to Game
-	number_input.emit(board_pos, num)
-	## Delete everything below
+	# Request Game to input number
+	num_input_requested.emit(board_pos, num)
 	
+	# TODO Delete everything below, let game parent control when to set value
 	
-	# Check if number button is disabled
-	if num_button.is_enabled:
-		# Put value in selected cell
-		focused_cell.set_value(num_button.value)
+	## Check if number button is disabled
+	#if num_button.is_enabled:
+		## Put value in selected cell
+		#focused_cell.set_value(num_button.value)
 
 
 ## Receives the cell_value_changed signal from the GameEvents autoload (cells).

@@ -1,7 +1,7 @@
 extends PanelContainer
 class_name Cell
 
-@onready var number: Label = %Number
+@onready var number_label: Label = %Number
 @onready var notes_container: GridContainer = %NotesContainer
 const EMPTY = ""
 enum CellState {DEFAULT, SELECTED, NUM_HIGHLIGHT, CONFLICT_HIGHLIGHT}
@@ -9,7 +9,7 @@ enum CellState {DEFAULT, SELECTED, NUM_HIGHLIGHT, CONFLICT_HIGHLIGHT}
 var font_ratio: float # font size / cell size; for future use
 var is_clue: bool
 var state: CellState
-var value: int
+var value: int # number cell represents
 var board_pos: Vector2i
 var notes: Array[int]
 var cell_styles: Dictionary[String, StyleBoxFlat]
@@ -43,15 +43,15 @@ func _init() -> void:
 	cell_styles["num_highlight"] = style.duplicate(true)
 
 func _ready() -> void:
-	font_ratio = number.get_theme_font_size("font_size") / size.y
-	number.text = EMPTY
+	font_ratio = number_label.get_theme_font_size("font_size") / size.y
+	number_label.text = EMPTY
 	cell_styles["default"] = get_theme_stylebox("panel")
 
 
 ## Called when the cell recieves an input event (mouse enter, click, etc.)
 func _on_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_select"):
-		print("cell clicked with value ", number.text, " and is clue: ", is_clue)
+		print("cell clicked with value ", number_label.text, " and is clue: ", is_clue)
 		# Cells that aren't clues can be SELECTED (filled)
 		if not is_clue:
 			if state != CellState.SELECTED:
@@ -85,9 +85,9 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 	value = clue
 	board_pos = pos
 	if clue == 0:
-		number.text = EMPTY
+		number_label.text = EMPTY
 	else:
-		number.text = str(clue)
+		number_label.text = str(clue)
 		is_clue = true
 
 
@@ -95,9 +95,9 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 ## input.
 func set_value(num: int) -> void:
 	value = num
-	number.remove_theme_color_override("font_color")
-	number.add_theme_color_override("font_color", Color.ROYAL_BLUE)
-	number.text = str(value)
+	number_label.remove_theme_color_override("font_color")
+	number_label.add_theme_color_override("font_color", Color.ROYAL_BLUE)
+	number_label.text = str(value)
 	GameEvents.emit_cell_value_changed(self)
 
 
