@@ -48,14 +48,14 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 	
 	var focused_cell: Cell = board.focused_cell
 	
-	# Check if a cell is foucsed
-	if focused_cell == null: return
-	# Check if cell is empty
-	if focused_cell.value != 0: return
+	# Check if a cell is foucsed or is empty
+	if focused_cell == null or focused_cell.value != 0:
+		#num_button.animation_player.stop()
+		num_button.animation_player.play("warning")
+		return
 	
-	var num: int = num_button.value
 	# Send Game an input request
-	num_input_requested.emit(focused_cell, num)
+	num_input_requested.emit(focused_cell, num_button)
 	
 	# TODO Delete everything below, let game parent control when to set value
 	
@@ -70,7 +70,6 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 ## NOTICE: This should only be used if the board doesn't allow incorrect inputs 
 ## so number inputs are not disabled when the player actually needs them.
 func _on_cell_value_changed(cell_changed: Cell) -> void:
-	# Check if there are 9 of the selected number already in the board
 	var num_count: int = 0
 	for row in board.cell_grid:
 		for cell in row:
@@ -79,3 +78,5 @@ func _on_cell_value_changed(cell_changed: Cell) -> void:
 			if num_count == 9:
 				number_selector.get_children()[cell_changed.value - 1].set_inactive()
 				return
+	
+	

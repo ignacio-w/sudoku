@@ -2,6 +2,7 @@ extends PanelContainer
 class_name NumberButton
 
 @onready var number_label: Label = %Number
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 var value: int
 var is_enabled: bool # Purely cosmetic, doesn't change functionality
@@ -49,9 +50,9 @@ func _on_gui_input(event: InputEvent) -> void:
 		number_button_clicked.emit(self)
 
 
-## Handles keyboard input. If a key equal to the number this represents is
-## pressed, emit the number_button_clicked signal as if the user had clicked
-## this button.
+## Handles keyboard input for the number this button represents. 
+## If a key equal to the number this represents is pressed, emit the 
+## number_button_clicked signal as if the user had clicked this button.
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo(): return
 	
@@ -72,4 +73,3 @@ func _on_mouse_entered() -> void:
 func _on_mouse_exited() -> void:
 	remove_theme_stylebox_override("panel")
 	add_theme_stylebox_override("panel", styleboxes["default"])
-	

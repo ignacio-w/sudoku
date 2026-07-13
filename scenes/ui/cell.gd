@@ -3,13 +3,14 @@ class_name Cell
 
 @onready var number_label: Label = %Number
 @onready var notes_container: GridContainer = %NotesContainer
+
 const EMPTY = ""
 enum CellState {DEFAULT, SELECTED, NUM_HIGHLIGHT, CONFLICT_HIGHLIGHT}
 
 var font_ratio: float # font size / cell size; for future use
 var is_clue: bool
 var state: CellState
-var value: int # number cell represents
+var value: int
 var board_pos: Vector2i
 var notes: Array[int]
 var cell_styles: Dictionary[String, StyleBoxFlat]
@@ -53,17 +54,32 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_select"):
 		print("cell clicked with value ", number_label.text, " and is clue: ", is_clue)
 		# Cells that aren't clues can be SELECTED (filled)
-		if not is_clue:
+		# NOTICE: Behavior with input validation
+		if value == 0:
 			if state != CellState.SELECTED:
 				cell_selected.emit(self)
 			else:
 				reset_highlight.emit()
-		# Cells that are clues can only be highlighted
+		# Cells that are clues can ONLY be highlighted
 		else:
 			if state != CellState.NUM_HIGHLIGHT:
 				cell_highlighted.emit(self)
 			else:
 				reset_highlight.emit()
+		
+		
+		## NOTICE: Behavior without input validation
+		#if not is_clue:
+			#if state != CellState.SELECTED:
+				#cell_selected.emit(self)
+			#else:
+				#reset_highlight.emit()
+		## Cells that are clues can only be highlighted
+		#else:
+			#if state != CellState.NUM_HIGHLIGHT:
+				#cell_highlighted.emit(self)
+			#else:
+				#reset_highlight.emit()
 
 
 ### Sets the value of a selected cell to the player's keyboard input.
@@ -96,7 +112,7 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 func set_value(num: int) -> void:
 	value = num
 	number_label.remove_theme_color_override("font_color")
-	number_label.add_theme_color_override("font_color", Color.ROYAL_BLUE)
+	number_label.add_theme_color_override("font_color", Color.CYAN)
 	number_label.text = str(value)
 	GameEvents.emit_cell_value_changed(self)
 
@@ -122,4 +138,3 @@ func set_state(cell_state: CellState = CellState.DEFAULT) -> void:
 		CellState.NUM_HIGHLIGHT:
 			add_theme_stylebox_override("panel", cell_styles["num_highlight"])
 			state = CellState.NUM_HIGHLIGHT
-			
