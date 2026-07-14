@@ -1,7 +1,6 @@
 extends Node
 
 @onready var game_ui: GameUI = $GameUI
-@onready var timer: Timer = $Timer
 
 var game: Sudoku
 
