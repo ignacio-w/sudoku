@@ -1,6 +1,7 @@
 extends Node
 
 @onready var game_ui: GameUI = $GameUI
+@onready var timer: Timer = $Timer
 
 var game: Sudoku
 
@@ -43,9 +44,9 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton):
 		cell.set_value(num)
 	else:
 		# Add to mistakes
-		game_ui.increment_strikes()
+		game.strikes += 1
+		game_ui.update_strikes(game.strikes)
 		# Animate number button
-		#num_button.animation_player.stop()
 		num_button.animation_player.play("incorrect")
 	
 	print("Sent to Main for check!")

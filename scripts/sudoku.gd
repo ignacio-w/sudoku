@@ -2,7 +2,9 @@ class_name Sudoku extends RefCounted
 
 var player_board: Array[Array]
 var solution_board: Array[Array]
+var strikes: int = 0
 enum Difficulty {EASY, NORMAL, HARD}
+
 
 ## TODO: Add settings, modes, etc. (ex: Validate input?)
 ## Extend class to create new Sodoku modes?

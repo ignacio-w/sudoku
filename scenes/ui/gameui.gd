@@ -2,15 +2,13 @@ class_name GameUI extends CanvasLayer
 
 @onready var board: MarginContainer = %Board
 @onready var number_selector: GridContainer = %NumberSelector
-@onready var strike_number: Label = %StrikeNumber
+@onready var strike_label: Label = %Strikes
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
 
-var strikes: int
 signal num_input_requested(cell: Cell, num: int)
 
 func _ready() -> void:
-	strikes = 0
-	strike_number.text = str(strikes)
+	strike_label.text = "Strikes: 0"
 	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	for child in number_selector.get_children():
 		child.queue_free()
@@ -34,10 +32,9 @@ func setup(board_array: Array[Array]):
 	board.create_visual_board(board_array)
 
 
-func increment_strikes():
-	strikes += 1
-	strike_number.text = str(strikes)
-
+## Sets the strike counter to the parameter.
+func update_strikes(s: int):
+	strike_label.text = "Strikes: " + str(s)
 
 
 ## Receives the number button clicked signal from number buttons. The argument
@@ -50,7 +47,7 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 	
 	# Check if a cell is foucsed or is empty
 	if focused_cell == null or focused_cell.value != 0:
-		#num_button.animation_player.stop()
+		num_button.animation_player.stop()
 		num_button.animation_player.play("warning")
 		return
 	
@@ -78,5 +75,3 @@ func _on_cell_value_changed(cell_changed: Cell) -> void:
 			if num_count == 9:
 				number_selector.get_children()[cell_changed.value - 1].set_inactive()
 				return
-	
-	

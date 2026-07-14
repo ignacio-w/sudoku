@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dbdear076ofrm" path="res://scenes/ui/cell.tscn" id="1_leno7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uhup1"]
-bg_color = Color(0.16, 0.16, 0.16, 1)
+bg_color = Color(1, 1, 1, 1)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
