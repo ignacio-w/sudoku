@@ -6,6 +6,7 @@ class_name NumberButton
 
 var value: int
 var is_enabled: bool # Purely cosmetic, doesn't change functionality
+var is_note_button: bool
 var styleboxes: Dictionary[String, StyleBoxFlat]
 
 signal number_button_clicked(num: NumberButton)
@@ -13,10 +14,14 @@ signal number_button_clicked(num: NumberButton)
 
 func _ready() -> void:
 	is_enabled = true
-	styleboxes["default"] = get_theme_stylebox("panel")
-	var stylebox: StyleBoxFlat = get_theme_stylebox("panel").duplicate(true)
+	is_note_button = false
+	var stylebox: StyleBoxFlat = StyleBoxFlat.new()
+	stylebox.bg_color = Color("1a1a1a")
+	stylebox.set_border_width_all(2)
+	stylebox.set_corner_radius_all(5)
+	styleboxes["default"] = stylebox.duplicate(true)
 	stylebox.bg_color = Color("303030")
-	styleboxes["clicked"] = stylebox
+	styleboxes["clicked"] = stylebox.duplicate(true)
 
 
 ## Sets the number that this button should represent
@@ -66,10 +71,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 ## Changes stylebox on mouse hover.
 func _on_mouse_entered() -> void:
-	remove_theme_stylebox_override("panel")
-	add_theme_stylebox_override("panel", styleboxes["clicked"])
+	if not is_note_button:
+		remove_theme_stylebox_override("panel")
+		add_theme_stylebox_override("panel", styleboxes["clicked"])
 
 ## Changes stylebox on mouse exit.
 func _on_mouse_exited() -> void:
-	remove_theme_stylebox_override("panel")
-	add_theme_stylebox_override("panel", styleboxes["default"])
+	if not is_note_button:
+		remove_theme_stylebox_override("panel")
+		add_theme_stylebox_override("panel", styleboxes["default"])

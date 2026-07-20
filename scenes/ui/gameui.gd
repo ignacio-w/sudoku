@@ -3,7 +3,10 @@ class_name GameUI extends CanvasLayer
 @onready var board: MarginContainer = %Board
 @onready var number_selector: GridContainer = %NumberSelector
 @onready var strike_label: Label = %Strikes
+@onready var stopwatch: Stopwatch = %Stopwatch
+
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
+var notes_mode: bool
 
 signal num_input_requested(cell: Cell, num: int)
 
@@ -30,6 +33,7 @@ func setup(board_array: Array[Array]):
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
 	
 	board.create_visual_board(board_array)
+	stopwatch.start(3)
 
 
 ## Sets the strike counter to the parameter.
@@ -75,3 +79,7 @@ func _on_cell_value_changed(cell_changed: Cell) -> void:
 			if num_count == 9:
 				number_selector.get_children()[cell_changed.value - 1].set_inactive()
 				return
+
+
+func _on_notes_toggle_toggled(toggled_on: bool) -> void:
+	pass # Replace with function body.

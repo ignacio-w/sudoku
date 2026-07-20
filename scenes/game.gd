@@ -25,6 +25,8 @@ func _on_cell_value_changed(cell: Cell):
 	# Check if the player has won
 	if game.player_board == game.solution_board:
 		print("Board complete! Ending game...")
+		game_ui.stopwatch.stop()
+		await get_tree().create_timer(3).timeout
 		get_tree().quit()
 	pass
 
