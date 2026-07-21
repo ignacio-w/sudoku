@@ -36,17 +36,24 @@ func _init() -> void:
 	style.border_color = Color.RED
 	style.set_corner_radius_all(5)
 	cell_styles["selected"] = style.duplicate(true)
-	style.bg_color = Color("1a1a1a")
 	style.border_color = Color.INDIAN_RED
+	style.bg_color = Color("1a1a1a")
 	cell_styles["conflict_highlight"] = style.duplicate(true)
 	style.border_color = Color.GREEN
-	style.bg_color = Color("1a341a")
+	style.bg_color = Color("132613ff")
 	cell_styles["num_highlight"] = style.duplicate(true)
+	style.bg_color = Color("0d1a0dff")
+	cell_styles["note_highlight"] = style.duplicate(true)
 
 func _ready() -> void:
+	# Empty number label, set default stylebox, make all notes invisibile
 	font_ratio = number_label.get_theme_font_size("font_size") / size.y
 	number_label.text = EMPTY
 	cell_styles["default"] = get_theme_stylebox("panel")
+	number_label.show()
+	notes_container.hide()
+	for label: Label in notes_container.get_children():
+		label.modulate = Color.TRANSPARENT
 
 
 ## Called when the cell recieves an input event (mouse enter, click, etc.)
@@ -54,7 +61,7 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_select"):
 		print("cell clicked with value ", number_label.text, " and is clue: ", is_clue)
 		# Cells that aren't clues can be SELECTED (filled)
-		# NOTICE: Behavior with input validation
+		# NOTICE: Behavior below assumes inputs are validated
 		if value == 0:
 			if state != CellState.SELECTED:
 				cell_selected.emit(self)
@@ -82,20 +89,6 @@ func _on_gui_input(event: InputEvent) -> void:
 				#reset_highlight.emit()
 
 
-### Sets the value of a selected cell to the player's keyboard input.
-#func _unhandled_key_input(event: InputEvent) -> void:
-	#if state != CellState.SELECTED: return
-	#
-	#var key_event = event as InputEventKey
-	#if event.is_pressed() and not event.is_echo():
-		## Unicode == 0 if key doesn't produce anything (ex. esc)
-		#if key_event.unicode != 0:
-			#var num = int(char(key_event.unicode))
-			## num == 0 if key pressed is 0 or not a number
-			#if num != 0:
-				#set_value(num)
-
-
 ## Sets the value of the cell to the given clue
 func set_clue(clue: int, pos: Vector2i) -> void:
 	value = clue
@@ -107,23 +100,46 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 		is_clue = true
 
 
-## Sets the value of the cell to the given number. Use this for user
+## Sets the value of the cell to the given number. Use this function for user
 ## input.
 func set_value(num: int) -> void:
 	value = num
 	number_label.remove_theme_color_override("font_color")
 	number_label.add_theme_color_override("font_color", Color.CYAN)
 	number_label.text = str(value)
+	
+	# Reset all notes to none
+	notes.clear()
+	for note in notes_container.get_children(): note.hide()
+	notes_container.hide()
+	number_label.show()
+	
 	GameEvents.emit_cell_value_changed(self)
 
 
-## Changes the stylebox if selected
+## Toggle the placement of the specified number in the notes.
+func toggle_note(num: int) -> void:
+	var note_label: Label = notes_container.get_children()[num - 1]
+	# Toggle note visibility
+	if num in notes:
+		notes.erase(num)
+		note_label.modulate = Color.TRANSPARENT
+	else:
+		notes.append(num)
+		note_label.modulate = Color.WHITE
+	
+	# If there are ANY notes, toggle visibility of notes container on.
+	if notes.size() > 0:
+		number_label.hide()
+		notes_container.show()
+	else:
+		number_label.show()
+		notes_container.hide()
+
+
+## Changes the stylebox to match the chosen state.
 func set_state(cell_state: CellState = CellState.DEFAULT) -> void:
 	remove_theme_stylebox_override("panel")
-	
-	## If the current state is equal to the 
-	#if state == cell_state:
-		#cell_state = CellState.DEFAULT
 	
 	match cell_state:
 		CellState.DEFAULT:
@@ -136,5 +152,8 @@ func set_state(cell_state: CellState = CellState.DEFAULT) -> void:
 			add_theme_stylebox_override("panel", cell_styles["conflict_highlight"])
 			state = CellState.CONFLICT_HIGHLIGHT
 		CellState.NUM_HIGHLIGHT:
-			add_theme_stylebox_override("panel", cell_styles["num_highlight"])
+			if notes.is_empty(): # different stylebox for notes vs completed cell
+				add_theme_stylebox_override("panel", cell_styles["num_highlight"])
+			else:
+				add_theme_stylebox_override("panel", cell_styles["note_highlight"])
 			state = CellState.NUM_HIGHLIGHT

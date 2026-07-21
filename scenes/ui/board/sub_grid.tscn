@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://csn5uij01jy01"]
 
-[ext_resource type="Script" uid="uid://c2w3onm8yepj7" path="res://scenes/ui/sub_grid.gd" id="1_7obug"]
-[ext_resource type="PackedScene" uid="uid://dbdear076ofrm" path="res://scenes/ui/cell.tscn" id="1_leno7"]
+[ext_resource type="Script" uid="uid://c2w3onm8yepj7" path="res://scenes/ui/board/sub_grid.gd" id="1_7obug"]
+[ext_resource type="PackedScene" uid="uid://dbdear076ofrm" path="res://scenes/ui/board/cell.tscn" id="1_leno7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uhup1"]
 bg_color = Color(1, 1, 1, 1)

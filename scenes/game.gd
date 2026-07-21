@@ -33,12 +33,17 @@ func _on_cell_value_changed(cell: Cell):
 
 ## Handles number input requests from the GameUI. If the number can be
 ## placed, tells the UI to place the number.
-func _on_num_input_request(cell: Cell, num_button: NumberButton):
+func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool) -> void:
 	var row: int = cell.board_pos.x
 	var col: int = cell.board_pos.y
 	var num: int = num_button.value
 	
-	# NOTICE: Game is currently validating inputs. 
+	# If note mode is currently on, change the note instead of setting the value
+	if note_mode:
+		cell.toggle_note(num)
+		return
+	
+	# NOTICE: Game currently validates inputs. 
 	# Check if placement @ pos matches solution
 	if game.is_solution(row, col, num):
 		# Place number

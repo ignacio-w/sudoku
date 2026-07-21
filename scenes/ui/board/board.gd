@@ -57,43 +57,40 @@ func get_subgrid_index(pos: Vector2i) -> int:
 
 ## Receives the cell selected signal from board cells and updates all other cells as
 ## necessary.
-func _on_cell_selected(selected_cell: Cell):
+func _on_cell_selected(selected_cell: Cell) -> void:
 	print("Recieved signal from cell at ", str(selected_cell.board_pos))
 	focused_cell = selected_cell
 	var conflict_positions = Sudoku.get_potential_conflict_positions(selected_cell.board_pos)
 	
 	# Highlight potential conflicts, and set all other cells to default
 	for row in cell_grid:
-		for cell in row:
-			assert(cell is Cell) # for debugging purposes
+		for cell: Cell in row:
 			if cell == selected_cell:
-				(cell as Cell).set_state(Cell.CellState.SELECTED)
-			elif (cell as Cell).board_pos in conflict_positions and (cell as Cell).value != 0:
-				(cell as Cell).set_state(Cell.CellState.CONFLICT_HIGHLIGHT)
+				cell.set_state(Cell.CellState.SELECTED)
+			elif cell.board_pos in conflict_positions and cell.value != 0:
+				cell.set_state(Cell.CellState.CONFLICT_HIGHLIGHT)
 			else:
 				cell.set_state()
 
 
-## Receives the cell highlighted signal from board cells and updates all other cells as
-## necessary.
-func _on_cell_highlighted(highlighted_cell: Cell):
+## Receives the cell highlighted signal from board cells and updates all other
+## cells as necessary.
+func _on_cell_highlighted(highlighted_cell: Cell) -> void:
 	var num := highlighted_cell.value
 	focused_cell = highlighted_cell
 	
-	# Get idential numbers
+	# Highlight all identical numbers and cells with notes with equal value
 	for row in cell_grid:
-		for cell in row:
-			assert(cell is Cell)
-			if (cell as Cell).value == num:
-				(cell as Cell).set_state(Cell.CellState.NUM_HIGHLIGHT)
+		for cell: Cell in row:
+			if cell.value == num or num in cell.notes:
+				cell.set_state(Cell.CellState.NUM_HIGHLIGHT)
 			else:
 				cell.set_state()
 
 
 ## Resets the highlighting of all cells in the grid.
-func clear_highlights():
+func clear_highlights() -> void:
 	for row in cell_grid:
-		for cell in row:
-			assert(cell is Cell)
-			(cell as Cell).set_state()
+		for cell: Cell in row:
+			cell.set_state()
 	focused_cell = null

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://doo5b7jm7x3y8"]
 
-[ext_resource type="Script" uid="uid://ca2k7eo251ygv" path="res://scenes/ui/board.gd" id="1_ef52f"]
-[ext_resource type="PackedScene" uid="uid://csn5uij01jy01" path="res://scenes/ui/sub_grid.tscn" id="2_uhup1"]
+[ext_resource type="Script" uid="uid://ca2k7eo251ygv" path="res://scenes/ui/board/board.gd" id="1_ef52f"]
+[ext_resource type="PackedScene" uid="uid://csn5uij01jy01" path="res://scenes/ui/board/sub_grid.tscn" id="2_uhup1"]
 
 [node name="Board" type="MarginContainer" unique_id=1119244381]
 offset_right = 386.0
