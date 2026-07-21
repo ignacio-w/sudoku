@@ -33,7 +33,6 @@ theme_override_constants/margin_right = 1
 
 [node name="Number" type="Label" parent="MarginContainer" unique_id=1393988652]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.74, 0.74, 0.74, 1)
 theme_override_font_sizes/font_size = 39
@@ -43,6 +42,7 @@ vertical_alignment = 1
 
 [node name="NotesContainer" type="GridContainer" parent="MarginContainer" unique_id=1854974782]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = -3
