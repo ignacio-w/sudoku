@@ -6,8 +6,6 @@
 [node name="Board" type="MarginContainer" unique_id=1119244381]
 offset_right = 386.0
 offset_bottom = 386.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
 theme_override_constants/margin_left = 1
 theme_override_constants/margin_top = 1
 theme_override_constants/margin_right = 1

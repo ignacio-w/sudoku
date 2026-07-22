@@ -36,8 +36,11 @@ func _init() -> void:
 	style.border_color = Color.RED
 	style.set_corner_radius_all(5)
 	cell_styles["selected"] = style.duplicate(true)
-	style.border_color = Color.INDIAN_RED
+	style.bg_color = Color("212121ff")
+	style.border_color = Color("004d46")
+	cell_styles["empty"] = style.duplicate(true)
 	style.bg_color = Color("1a1a1a")
+	style.border_color = Color.INDIAN_RED
 	cell_styles["conflict_highlight"] = style.duplicate(true)
 	style.border_color = Color.GREEN
 	style.bg_color = Color("132613ff")
@@ -95,9 +98,11 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 	board_pos = pos
 	if clue == 0:
 		number_label.text = EMPTY
+		add_theme_stylebox_override("panel", cell_styles["empty"])
 	else:
 		number_label.text = str(clue)
 		is_clue = true
+		add_theme_stylebox_override("panel", cell_styles["default"])
 
 
 ## Sets the value of the cell to the given number. Use this function for user
@@ -107,7 +112,7 @@ func set_value(num: int) -> void:
 	number_label.remove_theme_color_override("font_color")
 	number_label.add_theme_color_override("font_color", Color.CYAN)
 	number_label.text = str(value)
-	
+	add_theme_stylebox_override("panel", cell_styles["empty"])
 	# Reset all notes to none
 	notes.clear()
 	for note in notes_container.get_children(): note.hide()
@@ -143,7 +148,10 @@ func set_state(cell_state: CellState = CellState.DEFAULT) -> void:
 	
 	match cell_state:
 		CellState.DEFAULT:
-			add_theme_stylebox_override("panel", cell_styles["default"])
+			if value == 0:
+				add_theme_stylebox_override("panel", cell_styles["empty"])
+			else:
+				add_theme_stylebox_override("panel", cell_styles["default"])
 			state = CellState.DEFAULT
 		CellState.SELECTED:
 			add_theme_stylebox_override("panel", cell_styles["selected"])

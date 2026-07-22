@@ -23,6 +23,8 @@ font_color = Color(0.66, 0.66, 0.66, 1)
 custom_minimum_size = Vector2(60, 60)
 offset_right = 40.0
 offset_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_yh0nt")
 script = ExtResource("1_yh0nt")
 
@@ -48,7 +50,7 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = -3
 columns = 3
 
-[node name="Label" type="Label" parent="MarginContainer/NotesContainer" unique_id=958222668]
+[node name="Label" type="Label" parent="MarginContainer/NotesContainer" unique_id=1071262977]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
