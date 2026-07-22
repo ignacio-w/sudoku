@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bkrtugb8m13e0"]
+
+[ext_resource type="Script" uid="uid://b1dkir38nl0aj" path="res://scenes/ui/main_menu.gd" id="1_sl1te"]
+
+[node name="MainMenu" type="CanvasLayer" unique_id=1937722279]
+script = ExtResource("1_sl1te")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=320654936]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=1180662116]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer" unique_id=1266381991]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer" unique_id=1182634147]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=962301184]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "Sudoku"
+horizontal_alignment = 1
+
+[node name="Difficulty" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=689182658]
+layout_mode = 2
+text = "Choose a difficulty"
+horizontal_alignment = 1
+
+[node name="Easy" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1457176621]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Easy"
+
+[node name="Normal" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=91408664]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Normal"
+
+[node name="Hard" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=583904562]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Hard"
+
+[connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Easy" to="." method="_on_easy_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Normal" to="." method="_on_normal_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Hard" to="." method="_on_hard_pressed"]
