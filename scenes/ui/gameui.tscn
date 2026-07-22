@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cf4bp5esfka7i" path="res://scenes/ui/gameui.gd" id="1_gnl4o"]
 [ext_resource type="PackedScene" uid="uid://doo5b7jm7x3y8" path="res://scenes/ui/board/board.tscn" id="1_jscc3"]
+[ext_resource type="Script" uid="uid://0tosdpqfeevk" path="res://scenes/ui/board_scaler.gd" id="2_5nrn4"]
 [ext_resource type="PackedScene" uid="uid://lvsotrxoqrq6" path="res://scenes/ui/number_button.tscn" id="3_nqx3d"]
 [ext_resource type="Script" uid="uid://dgeuyifnufd8f" path="res://scenes/ui/stopwatch.gd" id="4_bmdha"]
 
@@ -22,14 +23,14 @@ theme_override_constants/margin_bottom = 1
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=668532120]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=462873795]
+[node name="BoardScaler" type="AspectRatioContainer" parent="MarginContainer/HBoxContainer" unique_id=396206587]
+custom_minimum_size = Vector2(646, 646)
 layout_mode = 2
+script = ExtResource("2_5nrn4")
 
-[node name="Board" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=637133488 instance=ExtResource("1_jscc3")]
+[node name="Board" parent="MarginContainer/HBoxContainer/BoardScaler" unique_id=637133488 instance=ExtResource("1_jscc3")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 1
-size_flags_vertical = 3
 
 [node name="SelectorPanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1549296339]
 layout_mode = 2
