@@ -45,7 +45,8 @@ func _init() -> void:
 	style.border_color = Color.GREEN
 	style.bg_color = Color("132613ff")
 	cell_styles["num_highlight"] = style.duplicate(true)
-	style.bg_color = Color("0d1a0dff")
+	style.bg_color = Color("1c211cff")
+	style.border_color = Color("008500ff")
 	cell_styles["note_highlight"] = style.duplicate(true)
 
 func _ready() -> void:
@@ -110,7 +111,7 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 func set_value(num: int) -> void:
 	value = num
 	number_label.remove_theme_color_override("font_color")
-	number_label.add_theme_color_override("font_color", Color.CYAN)
+	number_label.add_theme_color_override("font_color", Color.DEEP_SKY_BLUE)
 	number_label.text = str(value)
 	add_theme_stylebox_override("panel", cell_styles["empty"])
 	# Reset all notes to none

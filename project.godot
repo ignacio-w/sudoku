@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Sodoku"
+config/name="Sudoku"
 run/main_scene="uid://bkrtugb8m13e0"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameEvents="*uid://1wm2ll8q38d0"
+GameManager="*uid://c7ke7pqoh7mkd"
 
 [display]
 

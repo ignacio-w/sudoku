@@ -71,6 +71,8 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 ## Disables number input buttons when 9 of the number are found on the board.
 ## NOTICE: This should only be used if the board doesn't allow incorrect inputs 
 ## so number inputs are not disabled when the player actually needs them.
+## BUG: If all 9 of number have been filled, can't remove its notes
+## TODO: Update notes on cell value changed (remove impossible notes)
 func _on_cell_value_changed(cell_changed: Cell) -> void:
 	var num_count: int = 0
 	for row in board.cell_grid:

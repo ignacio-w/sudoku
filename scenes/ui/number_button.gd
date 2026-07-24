@@ -17,13 +17,13 @@ func _ready() -> void:
 	is_note_button = false
 	var stylebox: StyleBoxFlat = StyleBoxFlat.new()
 	stylebox.bg_color = Color("1a1a1a")
+	stylebox.border_color = Color.ROYAL_BLUE
 	stylebox.set_border_width_all(2)
 	stylebox.set_corner_radius_all(5)
 	styleboxes["default"] = stylebox.duplicate(true)
 	stylebox.bg_color = Color("303030")
 	styleboxes["clicked"] = stylebox.duplicate(true)
 	stylebox.bg_color = Color("a6a6a6")
-	stylebox.border_color = Color.WHITE
 	styleboxes["notes"] = stylebox.duplicate(true)
 	stylebox.bg_color = Color("737373ff")
 	styleboxes["notes_clicked"] = stylebox.duplicate(true)
@@ -47,6 +47,7 @@ func set_inactive(inactive: bool = true):
 		number_label.add_theme_color_override("font_color", Color.DIM_GRAY)
 
 
+## Set the button to note mode or normal mode. 
 func set_note_mode(note_mode: bool = true):
 	is_note_button = note_mode
 	if is_note_button:
