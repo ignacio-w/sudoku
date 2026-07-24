@@ -5,7 +5,7 @@ signal cell_value_changed(cell: Cell)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	print("GameEvents Singleton loaded and ready!")
 
 
 ## Called by cells when the value inside of them changes.

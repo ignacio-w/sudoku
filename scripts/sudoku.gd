@@ -3,21 +3,21 @@ class_name Sudoku extends RefCounted
 var player_board: Array[Array]
 var solution_board: Array[Array]
 var strikes: int = 0
-enum Difficulty {EASY, NORMAL, HARD}
+enum Difficulty {EASY, MEDIUM, HARD}
 
 
 ## TODO: Add settings, modes, etc. (ex: Validate input?)
 ## Extend class to create new Sodoku modes?
 ## NOTICE: For now, game is 9x9 regular sodoku where every input is checked
 
-## Creates a new game with a given difficulty. Creates a board, solution,
-## then prints the board. 
-func new_game(difficulty: Difficulty = Difficulty.EASY):
+## Constructor for a new Sudoku game with a given difficulty. Creates a board
+## solution, then prints the board. 
+func _init(difficulty: Difficulty = Difficulty.EASY) -> void:
 	player_board = _make_puzzle(difficulty)
 	solution_board = solve(player_board)
 	print_board(player_board)
 	
-	print("Solution board shown:")
+	print("Generated solution board:")
 	print_board(solution_board)
 
 
@@ -44,10 +44,16 @@ func _make_puzzle(difficulty: int) -> Array[Array]:
 	cells.shuffle()
 	
 	# TODO: Determine number of clues to give; add difficulty options
+	# Make difficulty algorithm more complex; make algorithm more accurately
+	# reflect puzzle difficulty as opposed to just based on # of clues
 	var clues: int
 	match difficulty:
 		Difficulty.EASY:
 			clues = randi_range(40, 55)
+		Difficulty.MEDIUM:
+			clues = randi_range(30, 39)
+		Difficulty.HARD:
+			clues = randi_range(20, 29)
 	
 	# Remove cells till all that remains is the number of clues
 	for cell in range(81 - clues):
@@ -58,7 +64,7 @@ func _make_puzzle(difficulty: int) -> Array[Array]:
 		if count_solutions(sudoku_board) != 1:
 			sudoku_board[row][col] = solution_value
 	
-	print("Board generated with ", str(clues), " clues.")
+	print("Level ", str(difficulty), " board generated with ", str(clues), " clues.")
 	return sudoku_board
 
 

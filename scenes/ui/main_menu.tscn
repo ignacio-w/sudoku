@@ -46,11 +46,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Easy"
 
-[node name="Normal" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=91408664]
+[node name="Medium" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=91408664]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Normal"
+text = "Medium"
 
 [node name="Hard" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=583904562]
 unique_name_in_owner = true
@@ -59,5 +59,5 @@ theme_override_font_sizes/font_size = 24
 text = "Hard"
 
 [connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Easy" to="." method="_on_easy_pressed"]
-[connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Normal" to="." method="_on_normal_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Medium" to="." method="_on_medium_pressed"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Hard" to="." method="_on_hard_pressed"]

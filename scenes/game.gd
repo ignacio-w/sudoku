@@ -5,8 +5,8 @@ extends Node
 var game: Sudoku
 
 func _ready() -> void:
-	game = Sudoku.new()
-	game.new_game()
+	game = Sudoku.new(GameManager.cur_difficulty)
+	#game.new_game()
 	await game_ui.setup(game.player_board)
 	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	game_ui.num_input_requested.connect(_on_num_input_request)
