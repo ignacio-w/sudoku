@@ -1,14 +1,14 @@
 class_name Sudoku extends RefCounted
 
-var player_board: Array[Array]
-var solution_board: Array[Array]
-var strikes: int = 0
+var player_board: Array[Array] ## The board the player uses to play the game.
+var solution_board: Array[Array] ## The end goal of the player's board.
+var strikes: int = 0 ## The number of mistakes the player has made.
 enum Difficulty {EASY, MEDIUM, HARD}
 
 
 ## TODO: Add settings, modes, etc. (ex: Validate input?)
-## Extend class to create new Sodoku modes?
-## NOTICE: For now, game is 9x9 regular sodoku where every input is checked
+## Extend class to create new Sudoku modes?
+## NOTICE: For now, game is 9x9 regular sudoku where every input is checked
 
 ## Constructor for a new Sudoku game with a given difficulty. Creates a board
 ## solution, then prints the board. 
@@ -21,7 +21,7 @@ func _init(difficulty: Difficulty = Difficulty.EASY) -> void:
 	print_board(solution_board)
 
 
-## Creates and returns a Sodoku puzzle with a given difficulty.
+## Creates and returns a Sudoku puzzle with a given difficulty.
 func _make_puzzle(difficulty: int) -> Array[Array]:
 	# Create an empty board
 	var sudoku_board: Array[Array] = []
@@ -68,7 +68,7 @@ func _make_puzzle(difficulty: int) -> Array[Array]:
 	return sudoku_board
 
 
-## Given a sodoku board, a new solved board is returned or null if there is no
+## Given a Sudoku board, a new solved board is returned or null if there is no
 ## solution. If instead you want to directly create a solution from a given
 ## board, use _solve_recursive().
 func solve(sudoku_board: Array[Array]):
@@ -78,16 +78,19 @@ func solve(sudoku_board: Array[Array]):
 	return null
 
 
-## Completly solves a given sodoku board by filling the board with random
-## numbers until a solution is found. This function will directly modify
-## the given sodoku board. If instead you want a solved copy returned,
-## use solve(). Returns true if the given board was able to be solved, false
-## otherwise.
+## Attempts to completly solves a given Sudoku board by testing numbers in cells
+## until a complete legal board is found.[br]
+##    - If no legal board is found after testing all numbers in all empty cells,
+## the board will return to its inital state and [code]false[/code] will be returned.[br]
+##    - If a legal board is found, the
+## given board will become the solution board and [code]true[/code] will be returned.[br]
+## If you don't want your inital board to be modified, use [method Sudoku.solve]
+## to get a copy of the solved board instead.
 func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 	# Find an empty cell
-	var empty_cell = find_empty_cell(sudoku_board)
+	var empty_cell := find_empty_cell(sudoku_board)
 	
-	# If there is no empty cells, board is complete and return true
+	# If there are no empty cells val of (-1, -1), board solution was found; END
 	if empty_cell == Vector2i(-1, -1):
 		return true
 	
@@ -96,25 +99,34 @@ func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 	var number_range = range(1, 10)
 	number_range.shuffle()
 	
+	# Test each number until a solution (or lack thereof) is determined
 	for num in number_range:
-		# Test each number until a solution (or lack thereof) is determined
+		# Check if number can be placed at empty cell
 		if is_valid_num(sudoku_board, row, col, num):
+			# Place number, then attempt to solve new board
 			sudoku_board[row][col] = num
-			# Check to see if a solution can be found after placing this num
+			print("Testing: ", num, " @", empty_cell)
+			print_stack()
 			if _solve_recursive(sudoku_board):
+				print("Solution found! ", num, " @", empty_cell)
 				return true
-			# When board is unsolvable, reset value and continue testing values
+			# Board is not solvable with this number at this cell. Reset
+			# cell. If all numbers have been tested, we backtrack. 
 			sudoku_board[row][col] = 0
 	
-	# If no number is valid, board is unsolvable and returns false
+	# No number can be placed in this cell to generate legal board. False on
+	# first cell means the board has no solution.
+	print("No solution found for ", empty_cell)
+	print("Backtracking...")
 	return false
 
 
-## Check if the number at the specified row and col would be a valid placement
-## on the given board. Does NOT check if the placement is the board's
-## solution, only if it's valid based on the current contents of the given
-## board. The position of the number inputted must be empty for this to work 
-## properly.
+## Checks to see if the number at the specified row and col would be a valid 
+## placement on the given board. In a normal game of Sudoku this means the
+## number is not already found in the position's row, column, or subgrid. [br]
+## This does NOT check if the placement is the solution to the board. It checks
+## validity based on the current state of the given board. The specified 
+## position must be empty (value of 0) for this to function properly.
 func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: int) -> bool:
 	
 	# We assume the spot on the board is empty. If not empty, return false
@@ -160,7 +172,7 @@ func find_empty_cell(sudoku_board: Array[Array]) -> Vector2i:
 
 ## Counts the number of solutions available from a partially filled board by
 ## attempting to recurisvely solve the board. This function attempts to answer
-## the question, "Does the puzzle have exactly 1 solution?".
+## the following question: "Does the puzzle have exactly 1 solution?".
 ## Returns 0 if there are no solutions to the board (invalid placement),
 ## 1 if there is only 1 solution, and a number greater than 1 if the solution to
 ## the board is ambiguous (may not be actual number of solutions).
@@ -205,7 +217,7 @@ func print_board(board: Array[Array]) -> void:
 
 ## Returns an array of all cells that need to be checked in order to determine
 ## potential conflicts with the value of the cell at the specified position. In
-## general in Sodoku, this is the row, column, and subgrid.
+## general, in a normal game of Sudoku, this is the row, column, and subgrid.
 static func get_potential_conflict_positions(pos: Vector2i) -> Array[Vector2i]:
 	var cell_positions: Array[Vector2i] = []
 	var row = pos.x

@@ -1,6 +1,6 @@
 class_name GameUI extends CanvasLayer
 
-@onready var board: MarginContainer = %Board
+@onready var board: BoardUI = %Board
 @onready var number_selector: GridContainer = %NumberSelector
 @onready var strike_label: Label = %Strikes
 @onready var stopwatch: Stopwatch = %Stopwatch
@@ -17,11 +17,11 @@ func _ready() -> void:
 		child.queue_free()
 
 
-## Sets up all visual nodes. Creates a visual Sodoku board given a 2D Array of numbers
-## representing the board. The Sodoku board should be exactly what is reflected
-## at the start of the game. The given board should not a solved, solution board.
-## Also creates the number buttons used to input numbers into the Sodoku board
-## and starts the stopwatch.
+## Sets up all visual nodes. Creates a visual Sudoku board given a 2D array of
+## numbers representing the board. The given Sudoku board is reflected at the 
+## start of the game. The given board should not a solved, solution board. Also
+## creates the number buttons used to input numbers into the Sudoku board and
+## starts the stopwatch.
 func setup(board_array: Array[Array]):
 	for child in number_selector.get_children():
 		child.queue_free()
@@ -33,13 +33,29 @@ func setup(board_array: Array[Array]):
 		# Connect the number_button_clicked signal to function in this node.
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
 	
-	board.create_visual_board(board_array)
+	await board.create_visual_board(board_array)
+	for i in range(1, 10):
+		update_number_button_active_state(i)
 	stopwatch.start(3)
 
 
 ## Sets the strike counter to the parameter.
-func update_strikes(s: int):
+func update_strikes(s: int) -> void:
 	strike_label.text = "Strikes: " + str(s)
+
+
+## Disables number input button if 9 of specified number are found on the board.
+## NOTICE: This should only be used if the board doesn't allow incorrect inputs 
+## so number inputs are not disabled when the player actually needs them.
+func update_number_button_active_state(num: int) -> void:
+	var num_count: int = 0
+	for row in board.cell_grid:
+		for cell: Cell in row:
+			if cell.value == num:
+				num_count += 1
+			if num_count == 9:
+				number_selector.get_children()[num - 1].set_inactive()
+				return
 
 
 ## Receives the number button clicked signal from number buttons. The argument
@@ -49,7 +65,6 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 	print("Received number button signal")
 	
 	var focused_cell: Cell = board.focused_cell
-	
 	# Can't put number in unfocused cell or cell already filled
 	if focused_cell == null or focused_cell.value != 0:
 		num_button.animation_player.stop()
@@ -68,20 +83,8 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 
 
 ## Receives the cell_value_changed signal from the GameEvents autoload (cells).
-## Disables number input buttons when 9 of the number are found on the board.
-## NOTICE: This should only be used if the board doesn't allow incorrect inputs 
-## so number inputs are not disabled when the player actually needs them.
-## BUG: If all 9 of number have been filled, can't remove its notes
-## TODO: Update notes on cell value changed (remove impossible notes)
 func _on_cell_value_changed(cell_changed: Cell) -> void:
-	var num_count: int = 0
-	for row in board.cell_grid:
-		for cell in row:
-			if (cell as Cell).value == cell_changed.value:
-				num_count += 1
-			if num_count == 9:
-				number_selector.get_children()[cell_changed.value - 1].set_inactive()
-				return
+	update_number_button_active_state(cell_changed.value)
 
 
 func _on_notes_toggle_toggled(toggled_on: bool) -> void:

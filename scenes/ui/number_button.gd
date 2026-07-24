@@ -74,18 +74,20 @@ func _force_square() -> void:
 
 
 ## Receives GUI input events. Emits the number_button_clicked signal
-## when clicked.
+## when clicked. Does not emit signal if inactive and note in not mode.
 func _on_gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_select") and is_enabled:
-		print("Number input received! ", str(value))
-		number_button_clicked.emit(self)
+	if event.is_action_pressed("ui_select"):
+		if is_enabled or is_note_button:
+			print("Number input received! ", str(value))
+			number_button_clicked.emit(self)
 
 
 ## Handles keyboard input for the number this button represents. 
 ## If a key equal to the number this represents is pressed, emit the 
 ## number_button_clicked signal as if the user had clicked this button.
 func _unhandled_key_input(event: InputEvent) -> void:
-	if not event.is_pressed() or event.is_echo() or not is_enabled: return
+	if not event.is_pressed() or event.is_echo(): return
+	if not is_note_button and not is_enabled: return
 	
 	var key_event = event as InputEventKey
 	var num := int(char(key_event.unicode)) if key_event.unicode != 0 else 0
@@ -97,20 +99,19 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 ## Changes stylebox on mouse hover.
 func _on_mouse_entered() -> void:
-	if not is_enabled: return
-	if not is_note_button:
-		remove_theme_stylebox_override("panel")
-		add_theme_stylebox_override("panel", styleboxes["clicked"])
-	else:
+	if is_note_button:
 		remove_theme_stylebox_override("panel")
 		add_theme_stylebox_override("panel", styleboxes["notes_clicked"])
+	elif is_enabled:
+		remove_theme_stylebox_override("panel")
+		add_theme_stylebox_override("panel", styleboxes["clicked"])
+
 
 ## Changes stylebox on mouse exit.
 func _on_mouse_exited() -> void:
-	if not is_enabled: return
-	if not is_note_button:
-		remove_theme_stylebox_override("panel")
-		add_theme_stylebox_override("panel", styleboxes["default"])
-	else:
+	if is_note_button:
 		remove_theme_stylebox_override("panel")
 		add_theme_stylebox_override("panel", styleboxes["notes"])
+	elif is_enabled:
+		remove_theme_stylebox_override("panel")
+		add_theme_stylebox_override("panel", styleboxes["default"])

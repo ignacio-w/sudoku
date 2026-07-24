@@ -1,6 +1,6 @@
-extends MarginContainer
+class_name BoardUI extends MarginContainer
 
-@onready var sodoku_grid: GridContainer = %SodokuGrid
+@onready var sudoku_grid: GridContainer = %SudokuGrid
 
 @export var board: Array[Array] # for testing only; 2D array of numbers
 
@@ -13,13 +13,15 @@ func _ready() -> void:
 	clear()
 
 
+## Frees all board nodes.
 func clear():
-	for grid in sodoku_grid.get_children():
+	for grid in sudoku_grid.get_children():
 		grid.queue_free()
 
 
-# Creates the board to be displayed on screen. The sodoku board is a 2D array of numbers where
-# each number represents what should be displayed on the board. 0 = NOTHING, 1-9 = 1-9
+## Creates the board to be displayed on screen and connects cell signals to this
+## node's functions. The sudoku board is a 2D array of numbers where each number
+## represents what should be displayed on the board (0 = NOTHING; 1-9 = 1-9).
 func create_visual_board(sudoku_board: Array[Array]):
 	clear()
 	await get_tree().process_frame
@@ -28,9 +30,9 @@ func create_visual_board(sudoku_board: Array[Array]):
 	# Create subgrids
 	for grid_i in range(9):
 		var new_subgrid = SUB_GRID.instantiate()
-		sodoku_grid.add_child(new_subgrid)
+		sudoku_grid.add_child(new_subgrid)
 	
-	var subgrids := sodoku_grid.get_children()
+	var subgrids := sudoku_grid.get_children()
 	# Instantiate cells in subgrids
 	for row in range(9):
 		cell_grid.append([])
