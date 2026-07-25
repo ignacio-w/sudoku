@@ -5,6 +5,14 @@
 [node name="MainMenu" type="CanvasLayer" unique_id=1937722279]
 script = ExtResource("1_sl1te")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=498946968]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.32159996, 0.48, 0.36912, 1)
+
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=320654936]
 anchors_preset = 15
 anchor_right = 1.0
@@ -58,6 +66,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Hard"
 
+[node name="Experiments" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1612183640]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Experimental"
+
 [connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Easy" to="." method="_on_easy_pressed"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Medium" to="." method="_on_medium_pressed"]
 [connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Hard" to="." method="_on_hard_pressed"]
+[connection signal="pressed" from="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Experiments" to="." method="_on_experiments_pressed"]

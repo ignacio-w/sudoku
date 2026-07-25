@@ -65,14 +65,20 @@ func _on_cell_selected(selected_cell: Cell) -> void:
 	var conflict_positions = Sudoku.get_potential_conflict_positions(selected_cell.board_pos)
 	
 	# Highlight potential conflicts, and set all other cells to default
-	for row in cell_grid:
-		for cell: Cell in row:
-			if cell == selected_cell:
-				cell.set_state(Cell.CellState.SELECTED)
-			elif cell.board_pos in conflict_positions and cell.value != 0:
-				cell.set_state(Cell.CellState.CONFLICT_HIGHLIGHT)
-			else:
+	if GameManager.visual_guides:
+		for row in cell_grid:
+			for cell: Cell in row:
+				if cell == selected_cell:
+					cell.set_state(Cell.CellState.SELECTED)
+				elif cell.board_pos in conflict_positions and cell.value != 0:
+					cell.set_state(Cell.CellState.CONFLICT_HIGHLIGHT)
+				else:
+					cell.set_state()
+	else:
+		for row in cell_grid:
+			for cell: Cell in row:
 				cell.set_state()
+		selected_cell.set_state(Cell.CellState.SELECTED)
 
 
 ## Receives the cell highlighted signal from board cells and updates all other
@@ -82,12 +88,43 @@ func _on_cell_highlighted(highlighted_cell: Cell) -> void:
 	focused_cell = highlighted_cell
 	
 	# Highlight all identical numbers and cells with notes with equal value
-	for row in cell_grid:
-		for cell: Cell in row:
-			if cell.value == num or num in cell.notes:
-				cell.set_state(Cell.CellState.NUM_HIGHLIGHT)
-			else:
+	if GameManager.visual_guides:
+		for row in cell_grid:
+			for cell: Cell in row:
+				if cell == highlighted_cell:
+					cell.set_state(Cell.CellState.SELECTED)
+				elif cell.value == num or num in cell.notes:
+					cell.set_state(Cell.CellState.EQUAL_HIGHLIGHT)
+				else:
+					cell.set_state()
+	else:
+		for row in cell_grid:
+			for cell: Cell in row:
 				cell.set_state()
+		highlighted_cell.set_state(Cell.CellState.EQUAL_HIGHLIGHT)
+
+
+## Handles keyboard navigation of the board.
+func _unhandled_key_input(event: InputEvent) -> void:
+	if focused_cell == null or event.is_released(): return
+	var row: int = focused_cell.board_pos.x
+	var col: int = focused_cell.board_pos.y
+	var new_row: int = row
+	var new_col: int = col
+	
+	if event.is_action("ui_right"):
+		if col < 8: new_col += 1
+	if event.is_action("ui_left"):
+		if col > 0: new_col -= 1
+	if event.is_action("ui_down"):
+		if row < 8: new_row += 1
+	if event.is_action("ui_up"):
+		if row > 0: new_row -= 1
+	
+	if focused_cell.board_pos != Vector2i(new_row, new_col):
+		(cell_grid[new_row][new_col] as Cell).emit_clicked_signal()
+		get_viewport().set_input_as_handled()
+		
 
 
 ## Resets the highlighting of all cells in the grid.

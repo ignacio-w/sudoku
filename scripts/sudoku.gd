@@ -105,10 +105,7 @@ func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 		if is_valid_num(sudoku_board, row, col, num):
 			# Place number, then attempt to solve new board
 			sudoku_board[row][col] = num
-			print("Testing: ", num, " @", empty_cell)
-			print_stack()
 			if _solve_recursive(sudoku_board):
-				print("Solution found! ", num, " @", empty_cell)
 				return true
 			# Board is not solvable with this number at this cell. Reset
 			# cell. If all numbers have been tested, we backtrack. 
@@ -116,8 +113,6 @@ func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 	
 	# No number can be placed in this cell to generate legal board. False on
 	# first cell means the board has no solution.
-	print("No solution found for ", empty_cell)
-	print("Backtracking...")
 	return false
 
 

@@ -9,6 +9,14 @@
 [node name="GameUI" type="CanvasLayer" unique_id=217149648]
 script = ExtResource("1_gnl4o")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1761265032]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.32159996, 0.48, 0.36912, 1)
+
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1786013493]
 anchors_preset = 15
 anchor_right = 1.0
