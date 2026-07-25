@@ -48,12 +48,14 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 	if game.is_solution(row, col, num):
 		# Place number
 		cell.set_value(num)
+		
 		# Delete notes of equal values
 		var notes_positions = Sudoku.get_potential_conflict_positions(cell.board_pos)
 		for pos in notes_positions:
 			var note_cell: Cell = game_ui.board.cell_grid[pos.x][pos.y]
 			if note_cell.notes.has(num):
 				note_cell.toggle_note(num)
+		
 		# Highlight equal values
 		cell.cell_highlighted.emit(cell)
 	else:

@@ -87,6 +87,7 @@ func _on_cell_value_changed(cell_changed: Cell) -> void:
 	update_number_button_active_state(cell_changed.value)
 
 
+## Change all number buttons to note mode or normal mode.
 func _on_notes_toggle_toggled(toggled_on: bool) -> void:
 	notes_mode = toggled_on
 	for num_button in number_selector.get_children():
