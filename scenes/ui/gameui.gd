@@ -2,7 +2,7 @@ class_name GameUI extends CanvasLayer
 
 @onready var board: BoardUI = %Board
 @onready var number_selector: GridContainer = %NumberSelector
-@onready var strike_label: Label = %Strikes
+@onready var mistake_label: Label = %Mistakes
 @onready var stopwatch: Stopwatch = %Stopwatch
 
 const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
@@ -11,7 +11,7 @@ var notes_mode: bool
 signal num_input_requested(cell: Cell, num: int, is_notes_mode: bool)
 
 func _ready() -> void:
-	strike_label.text = "Strikes: 0"
+	mistake_label.text = "Mistakes: 0"
 	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	for child in number_selector.get_children():
 		child.queue_free()
@@ -39,9 +39,9 @@ func setup(board_array: Array[Array]):
 	stopwatch.start(3)
 
 
-## Sets the strike counter to the parameter.
-func update_strikes(s: int) -> void:
-	strike_label.text = "Strikes: " + str(s)
+## Sets the mistake counter to the parameter.
+func update_mistakes(s: int) -> void:
+	mistake_label.text = "Mistakes: " + str(s)
 
 
 ## Disables number input button if 9 of specified number are found on the board.

@@ -60,8 +60,8 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 		cell.cell_highlighted.emit(cell)
 	else:
 		# Add to mistakes
-		game.strikes += 1
-		game_ui.update_strikes(game.strikes)
+		game.mistakes += 1
+		game_ui.update_mistakes(game.mistakes)
 		# Animate number button
 		num_button.animation_player.play("incorrect")
 	

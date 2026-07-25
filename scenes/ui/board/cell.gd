@@ -54,7 +54,7 @@ func _init() -> void:
 	style.bg_color = Color("132613ff")
 	style.border_color = Color("00c500ff")
 	cell_styles["num_highlight"] = style.duplicate(true)
-	style.bg_color = Color("1c211cff")
+	style.bg_color = Color("212121ff")
 	style.border_color = Color("008500ff")
 	cell_styles["note_highlight"] = style.duplicate(true)
 

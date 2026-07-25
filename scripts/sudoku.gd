@@ -2,7 +2,7 @@ class_name Sudoku extends RefCounted
 
 var player_board: Array[Array] ## The board the player uses to play the game.
 var solution_board: Array[Array] ## The end goal of the player's board.
-var strikes: int = 0 ## The number of mistakes the player has made.
+var mistakes: int = 0 ## The number of mistakes the player has made.
 enum Difficulty {EASY, MEDIUM, HARD}
 
 
