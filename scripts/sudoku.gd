@@ -14,7 +14,6 @@ enum Difficulty {EASY, MEDIUM, HARD}
 ## solution, then prints the board. 
 func _init(difficulty: Difficulty = Difficulty.EASY) -> void:
 	player_board = _make_puzzle(difficulty)
-	solution_board = solve(player_board)
 	print_board(player_board)
 	
 	print("Generated solution board:")
@@ -29,12 +28,12 @@ func _make_puzzle(difficulty: int) -> Array[Array]:
 	for row in range(9):
 		sudoku_board[row] = []
 		sudoku_board[row].resize(9)
-		for col in range(9):
-			sudoku_board[row][col] = 0
+		sudoku_board[row].fill(0)
 	
-	# Create a solved board
+	# Create and store a solved board
 	if not _solve_recursive(sudoku_board):
 		push_warning("Solved board could not be created!")
+	solution_board = sudoku_board.duplicate(true)
 	
 	# Get cell positions
 	var cells: Array[Vector2i] = []
@@ -46,23 +45,32 @@ func _make_puzzle(difficulty: int) -> Array[Array]:
 	# TODO: Determine number of clues to give; add difficulty options
 	# Make difficulty algorithm more complex; make algorithm more accurately
 	# reflect puzzle difficulty as opposed to just based on # of clues
-	var clues: int
+	var target_clues: int
 	match difficulty:
 		Difficulty.EASY:
-			clues = randi_range(40, 55)
+			target_clues = randi_range(36, 46)
 		Difficulty.MEDIUM:
-			clues = randi_range(30, 39)
+			target_clues = randi_range(30, 35)
 		Difficulty.HARD:
-			clues = randi_range(20, 29)
+			target_clues = randi_range(25, 29)
 	
-	# Remove cells till all that remains is the number of clues
-	for cell in range(81 - clues):
-		var row = cells[cell].x
-		var col = cells[cell].y
+	# Remove cells till target # of clues is hit or max # of cells have been removed
+	var clues := 81
+	for cell in cells:
+		if clues <= target_clues:
+			break
+		
+		var row = cell.x
+		var col = cell.y
 		var solution_value = sudoku_board[row][col]
+		
 		sudoku_board[row][col] = 0
+		
+		# Check # of solutions; if only one unique solution, we can safely remove clue
 		if count_solutions(sudoku_board) != 1:
 			sudoku_board[row][col] = solution_value
+		else:
+			clues -= 1
 	
 	print("Level ", str(difficulty), " board generated with ", str(clues), " clues.")
 	return sudoku_board
@@ -120,21 +128,13 @@ func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 ## placement on the given board. In a normal game of Sudoku this means the
 ## number is not already found in the position's row, column, or subgrid. [br]
 ## This does NOT check if the placement is the solution to the board. It checks
-## validity based on the current state of the given board. The specified 
-## position must be empty (value of 0) for this to function properly.
+## validity based on the current state of the given board.
 func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: int) -> bool:
-	
-	# We assume the spot on the board is empty. If not empty, return false
-	if sudoku_board[row][col] != 0:
-		return false
-	
-	# Check column
-	for col_i in range(9):
-		if sudoku_board[row][col_i] == num:
+	# Check row and column
+	for i in range(9):
+		if sudoku_board[i][col] == num and i != row:
 			return false
-	# Check row
-	for row_i in range(9):
-		if sudoku_board[row_i][col] == num:
+		if sudoku_board[row][i] == num and i!= col:
 			return false
 	
 	# Check subgrid
@@ -144,9 +144,12 @@ func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: int) -> b
 	var c: int = col / 3 * 3
 	for i in range(3):
 		for j in range(3):
+			if r + i == row and c + j == col:
+				continue
 			if sudoku_board[r + i][c + j] == num:
 				return false
 	return true
+
 
 ## Checks if the requested input matches the solution board.
 func is_solution(row: int, col: int, num: int) -> bool:
