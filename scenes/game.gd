@@ -2,11 +2,10 @@ extends Node
 
 @onready var game_ui: GameUI = $GameUI
 
-var game: Sudoku
+var game: SudokuPuzzle
 
 func _ready() -> void:
-	game = Sudoku.new(GameManager.cur_difficulty)
-	#game.new_game()
+	game = SudokuGenerator.new().generate(GameManager.cur_difficulty)
 	await game_ui.setup(game.player_board)
 	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	game_ui.num_input_requested.connect(_on_num_input_request)
@@ -50,7 +49,7 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 		cell.set_value(num)
 		
 		# Delete notes of equal values
-		var notes_positions = Sudoku.get_potential_conflict_positions(cell.board_pos)
+		var notes_positions = SudokuRules.get_potential_conflict_positions(cell.board_pos)
 		for pos in notes_positions:
 			var note_cell: Cell = game_ui.board.cell_grid[pos.x][pos.y]
 			if note_cell.notes.has(num):

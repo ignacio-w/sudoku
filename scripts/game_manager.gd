@@ -1,6 +1,6 @@
 extends Node
 
-var cur_difficulty: Sudoku.Difficulty
+var cur_difficulty: SudokuGenerator.Difficulty
 
 # Settings
 var visual_guides: bool = true ## Number & note highlighing

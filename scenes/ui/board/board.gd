@@ -62,7 +62,7 @@ func get_subgrid_index(pos: Vector2i) -> int:
 func _on_cell_selected(selected_cell: Cell) -> void:
 	print("Recieved signal from cell at ", str(selected_cell.board_pos))
 	focused_cell = selected_cell
-	var conflict_positions = Sudoku.get_potential_conflict_positions(selected_cell.board_pos)
+	var conflict_positions = SudokuRules.get_potential_conflict_positions(selected_cell.board_pos)
 	
 	# Highlight potential conflicts, and set all other cells to default
 	if GameManager.visual_guides:
