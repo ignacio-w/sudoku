@@ -10,7 +10,6 @@ enum CellState {
 	SELECTED, ## Focused cell
 	CONFLICT_HIGHLIGHT, ## Conflict to the focused cell
 	EQUAL_HIGHLIGHT ## Equal in value to the focused cell
-	
 	}
 
 var font_ratio: float # font size / cell size; for future use
@@ -57,6 +56,7 @@ func _init() -> void:
 	style.bg_color = Color("212121ff")
 	style.border_color = Color("008500ff")
 	cell_styles["note_highlight"] = style.duplicate(true)
+
 
 func _ready() -> void:
 	# Empty number label, set default stylebox, make all notes invisibile
@@ -105,6 +105,7 @@ func emit_clicked_signal(input_validation: bool = true):
 			else:
 				reset_highlight.emit()
 
+
 ## Sets the value of the cell to the given clue
 func set_clue(clue: int, pos: Vector2i) -> void:
 	value = clue
@@ -118,9 +119,9 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 		add_theme_stylebox_override("panel", cell_styles["default"])
 
 
-## Sets the value of the cell to the given number. Use this function for user
-## input.
-func set_value(num: int) -> void:
+## Displays the given value on this cell. This should be used when the user
+## wants to input the actual number (instead of a note).
+func display_value(num: int) -> void:
 	value = num
 	
 	# Change stylebox
@@ -129,26 +130,25 @@ func set_value(num: int) -> void:
 	number_label.text = str(value)
 	add_theme_stylebox_override("panel", cell_styles["empty"])
 	
-	# Reset all notes to none
+	# Clear all note visuals since filled cell can't show pencil marks
 	notes.clear()
 	for note in notes_container.get_children(): note.hide()
 	notes_container.hide()
 	number_label.show()
+
+
+## Displays the given array of notes in the cell and hides the rest. 
+func display_notes(new_notes: Array[int]) -> void:
+	# Copy array so notes are only updated when this function is called
+	notes = new_notes.duplicate()
 	
-	# Emit signals
-	GameEvents.emit_cell_value_changed(self)
-
-
-## Toggle the placement of the specified number in the notes.
-func toggle_note(num: int) -> void:
-	var note_label: Label = notes_container.get_children()[num - 1]
-	# Toggle note visibility
-	if num in notes:
-		notes.erase(num)
-		note_label.modulate = Color.TRANSPARENT
-	else:
-		notes.append(num)
-		note_label.modulate = Color.WHITE
+	# Set note visibility
+	for num in range(1, 10):
+		var note_label: Label = notes_container.get_children()[num - 1]
+		if num in notes:
+			note_label.modulate = Color.WHITE
+		else:
+			note_label.modulate = Color.TRANSPARENT
 	
 	# If there are ANY notes, toggle visibility of notes container on.
 	if notes.size() > 0:

@@ -10,7 +10,17 @@ func _init() -> void:
 
 ## Creates and returns a Sudoku puzzle with a given difficulty.
 func generate(difficulty: int) -> SudokuPuzzle:
+	# Construct empty SudokuPuzzle
 	var puzzle := SudokuPuzzle.new()
+	
+	# Create empty notes board
+	puzzle.notes_board = []
+	puzzle.notes_board.resize(9)
+	for row in range(9):
+		puzzle.notes_board[row] = []
+		puzzle.notes_board[row].resize(9)
+		for col in range(9):
+			puzzle.notes_board[row][col] = [] as Array[int]
 	
 	# Create an empty board
 	var board: Array[Array] = []
@@ -64,4 +74,5 @@ func generate(difficulty: int) -> SudokuPuzzle:
 	
 	print("Level ", str(difficulty), " board generated with ", str(clues), " clues.")
 	puzzle.player_board = board
+	
 	return puzzle

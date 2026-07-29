@@ -68,6 +68,7 @@ text = "Hard"
 
 [node name="Experiments" type="Button" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1612183640]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Experimental"
