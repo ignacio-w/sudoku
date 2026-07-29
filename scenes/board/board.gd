@@ -22,7 +22,7 @@ func clear():
 ## Creates the board to be displayed on screen and connects cell signals to this
 ## node's functions. The sudoku board is a 2D array of numbers where each number
 ## represents what should be displayed on the board (0 = NOTHING; 1-9 = 1-9).
-func create_visual_board(sudoku_board: Array[Array]):
+func create_visual_board(sudoku_board: Array[Array]) -> void:
 	clear()
 	focused_cell = null
 	await get_tree().process_frame
@@ -47,7 +47,7 @@ func create_visual_board(sudoku_board: Array[Array]):
 			# Connect signals and set cell to its correct starting value
 			new_cell.cell_selected.connect(_on_cell_selected)
 			new_cell.cell_highlighted.connect(_on_cell_highlighted)
-			new_cell.reset_highlight.connect(clear_highlights)
+			new_cell.cell_cleared.connect(clear_highlights)
 			new_cell.set_clue(sudoku_board[row][col], Vector2i(row, col))
 
 
@@ -56,6 +56,11 @@ func create_visual_board(sudoku_board: Array[Array]):
 func get_subgrid_index(pos: Vector2i) -> int:
 	@warning_ignore("integer_division")
 	return (pos.x / 3) * 3 + (pos.y / 3)
+
+
+## Updates all cell states based on the current focused state.
+func focus_cell(cell: Cell) -> void:
+	cell.emit_clicked_signal(GameManager.validate_inputs, true)
 
 
 ## Receives the cell selected signal from board cells and updates all other cells as
@@ -127,7 +132,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if focused_cell.board_pos != Vector2i(new_row, new_col):
 		(cell_grid[new_row][new_col] as Cell).emit_clicked_signal()
 		get_viewport().set_input_as_handled()
-		
 
 
 ## Resets the highlighting of all cells in the grid.

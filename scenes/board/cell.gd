@@ -1,10 +1,8 @@
-extends PanelContainer
-class_name Cell
+class_name Cell extends PanelContainer
 
-@onready var number_label: Label = %Number
-@onready var notes_container: GridContainer = %NotesContainer
-
-const EMPTY = ""
+signal cell_highlighted(cell: Cell)
+signal cell_selected(cell: Cell)
+signal cell_cleared
 enum CellState {
 	DEFAULT, ## Normal cell state; no highlights
 	SELECTED, ## Focused cell
@@ -12,6 +10,7 @@ enum CellState {
 	EQUAL_HIGHLIGHT ## Equal in value to the focused cell
 	}
 
+const EMPTY = ""
 var font_ratio: float # font size / cell size; for future use
 var is_clue: bool
 var state: CellState
@@ -20,9 +19,9 @@ var board_pos: Vector2i
 var notes: Array[int]
 var cell_styles: Dictionary[String, StyleBoxFlat]
 
-signal cell_highlighted(cell: Cell)
-signal cell_selected(cell: Cell)
-signal reset_highlight
+@onready var number_label: Label = %Number
+@onready var notes_container: GridContainer = %NotesContainer
+
 # TODO: Cell selection
 # - Highlight cell
 # - Wait for input
@@ -76,34 +75,34 @@ func _on_gui_input(event: InputEvent) -> void:
 		emit_clicked_signal()
 
 
-func emit_clicked_signal(input_validation: bool = true):
+func emit_clicked_signal(input_validation: bool = true, set_focused := false) -> void:
 	# Cells that aren't clues can be SELECTED (filled)
 	# NOTICE: Behavior below assumes inputs are validated
 	if input_validation:
 		if value == 0:
-			if state != CellState.SELECTED:
+			if state != CellState.SELECTED or set_focused:
 				cell_selected.emit(self)
 			else:
-				reset_highlight.emit()
+				cell_cleared.emit()
 		# Cells that are clues can ONLY be highlighted
 		else:
-			if state != CellState.EQUAL_HIGHLIGHT and state != CellState.SELECTED:
+			if state != CellState.EQUAL_HIGHLIGHT and state != CellState.SELECTED or set_focused:
 				cell_highlighted.emit(self)
 			else:
-				reset_highlight.emit()
+				cell_cleared.emit()
 	else:
 	# NOTICE: Behavior without input validation
 		if not is_clue:
 			if state != CellState.SELECTED:
 				cell_selected.emit(self)
 			else:
-				reset_highlight.emit()
+				cell_cleared.emit()
 		# Cells that are clues can only be highlighted
 		else:
 			if state != CellState.EQUAL_HIGHLIGHT:
 				cell_highlighted.emit(self)
 			else:
-				reset_highlight.emit()
+				cell_cleared.emit()
 
 
 ## Sets the value of the cell to the given clue
@@ -113,6 +112,9 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 	if clue == 0:
 		number_label.text = EMPTY
 		add_theme_stylebox_override("panel", cell_styles["empty"])
+		# Anything inputted will have a different color
+		number_label.remove_theme_color_override("font_color")
+		number_label.add_theme_color_override("font_color", Color.DEEP_SKY_BLUE)
 	else:
 		number_label.text = str(clue)
 		is_clue = true
@@ -123,13 +125,10 @@ func set_clue(clue: int, pos: Vector2i) -> void:
 ## wants to input the actual number (instead of a note).
 func display_value(num: int) -> void:
 	value = num
-	
-	# Change stylebox
-	number_label.remove_theme_color_override("font_color")
-	number_label.add_theme_color_override("font_color", Color.DEEP_SKY_BLUE)
-	number_label.text = str(value)
-	add_theme_stylebox_override("panel", cell_styles["empty"])
-	
+	if num == 0: # If 0, just reset cell
+		number_label.text = EMPTY
+	else:
+		number_label.text = str(value)
 	# Clear all note visuals since filled cell can't show pencil marks
 	notes.clear()
 	for note in notes_container.get_children(): note.hide()

@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://0tosdpqfeevk" path="res://scenes/ui/board_scaler.gd" id="2_5nrn4"]
 [ext_resource type="PackedScene" uid="uid://lvsotrxoqrq6" path="res://scenes/ui/number_button.tscn" id="3_nqx3d"]
 [ext_resource type="Script" uid="uid://dgeuyifnufd8f" path="res://scenes/ui/stopwatch.gd" id="4_bmdha"]
+[ext_resource type="PackedScene" uid="uid://cvsfpj4osg1ym" path="res://scenes/ui/action_bar.tscn" id="6_n64n4"]
 
 [node name="GameUI" type="CanvasLayer" unique_id=217149648]
 script = ExtResource("1_gnl4o")
@@ -40,45 +41,46 @@ script = ExtResource("2_5nrn4")
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SelectorPanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1549296339]
+[node name="NumberPanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1549296339]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/SelectorPanelContainer" unique_id=1830331976]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/NumberPanelContainer" unique_id=1830331976]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 
-[node name="NumberSelector" type="GridContainer" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer" unique_id=1908143308]
+[node name="NumberSelector" type="GridContainer" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer" unique_id=1908143308]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="NumberButton" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=7488472 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=7488472 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton2" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1655204838 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton2" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1655204838 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton3" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1457734819 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton3" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1457734819 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton4" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1546039430 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton4" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1546039430 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton5" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1473690151 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton5" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1473690151 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton6" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=453907866 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton6" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=453907866 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton7" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1982038624 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton7" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1982038624 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton8" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1125424251 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton8" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1125424251 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
-[node name="NumberButton9" parent="MarginContainer/HBoxContainer/SelectorPanelContainer/MarginContainer/NumberSelector" unique_id=1201367247 instance=ExtResource("3_nqx3d")]
+[node name="NumberButton9" parent="MarginContainer/HBoxContainer/NumberPanelContainer/MarginContainer/NumberSelector" unique_id=1201367247 instance=ExtResource("3_nqx3d")]
 layout_mode = 2
 
 [node name="ExtraPanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=228835721]
@@ -90,21 +92,19 @@ layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer" unique_id=1852151977]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/HBoxContainer" unique_id=2041483287]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer" unique_id=2041483287]
 layout_mode = 2
 alignment = 1
 
-[node name="Mistakes" type="Label" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=2121059670]
+[node name="Mistakes" type="Label" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=2121059670]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 29
 text = "Strikes: 0"
+horizontal_alignment = 1
 
-[node name="Stopwatch" type="Label" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1956447886]
+[node name="Stopwatch" type="Label" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=1956447886]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -114,14 +114,12 @@ text = "-:--"
 horizontal_alignment = 1
 script = ExtResource("4_bmdha")
 
-[node name="NotesToggle" type="CheckButton" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/HBoxContainer/VBoxContainer" unique_id=139291243]
+[node name="NotesToggle" type="CheckButton" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=139291243]
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Notes Mode"
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/HBoxContainer" unique_id=1834291366]
-visible = false
+[node name="ActionBar" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=1832336150 instance=ExtResource("6_n64n4")]
 layout_mode = 2
-text = "Number selection, timer, 
-notes, stats, settings, etc."
 
-[connection signal="toggled" from="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/HBoxContainer/VBoxContainer/NotesToggle" to="." method="_on_notes_toggle_toggled"]
+[connection signal="toggled" from="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer/NotesToggle" to="." method="_on_notes_toggle_toggled"]

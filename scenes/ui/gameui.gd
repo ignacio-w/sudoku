@@ -1,14 +1,16 @@
 class_name GameUI extends CanvasLayer
 
+signal num_input_requested(cell: Cell, num: int, is_notes_mode: bool)
+
+const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
+
+var notes_mode: bool
+
 @onready var board: BoardUI = %Board
 @onready var number_selector: GridContainer = %NumberSelector
 @onready var mistake_label: Label = %Mistakes
 @onready var stopwatch: Stopwatch = %Stopwatch
 
-const NUMBER_BUTTON = preload("uid://lvsotrxoqrq6")
-var notes_mode: bool
-
-signal num_input_requested(cell: Cell, num: int, is_notes_mode: bool)
 
 func _ready() -> void:
 	mistake_label.text = "Mistakes: 0"
@@ -34,7 +36,7 @@ func setup(board_array: Array[Array]):
 	
 	await board.create_visual_board(board_array)
 	for i in range(1, 10):
-		update_number_button_active_state(i)
+		update_number_buttons_active_state()
 	stopwatch.start(3)
 
 
@@ -46,15 +48,17 @@ func update_mistakes(s: int) -> void:
 ## Disables number input button if 9 of specified number are found on the board.
 ## NOTICE: This should only be used if the board doesn't allow incorrect inputs 
 ## so number inputs are not disabled when the player actually needs them.
-func update_number_button_active_state(num: int) -> void:
-	var num_count: int = 0
-	for row in board.cell_grid:
-		for cell: Cell in row:
-			if cell.value == num:
-				num_count += 1
-			if num_count == 9:
-				number_selector.get_children()[num - 1].set_inactive()
-				return
+func update_number_buttons_active_state() -> void:
+	for num in range(1, 10):
+		var num_count: int = 0
+		for row in board.cell_grid:
+			for cell: Cell in row:
+				if cell.value == num:
+					num_count += 1
+		if num_count == 9:
+			number_selector.get_children()[num - 1].set_inactive()
+		else:
+			number_selector.get_children()[num - 1].set_inactive(false)
 
 
 ## Receives the number button clicked signal from number buttons. The argument
@@ -72,18 +76,10 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 	
 	# Send Game an input request
 	num_input_requested.emit(focused_cell, num_button, notes_mode)
-	
-	# TODO Delete everything below, let game parent control when to set value
-	
-	## Check if number button is disabled
-	#if num_button.is_enabled:
-		## Put value in selected cell
-		#focused_cell.set_value(num_button.value)
 
 
 ## Change all number buttons to note mode or normal mode.
 func _on_notes_toggle_toggled(toggled_on: bool) -> void:
 	notes_mode = toggled_on
-	for num_button in number_selector.get_children():
-		assert(num_button is NumberButton)
-		(num_button as NumberButton).set_note_mode(notes_mode)
+	for num_button: NumberButton in number_selector.get_children():
+		num_button.set_note_mode(notes_mode)

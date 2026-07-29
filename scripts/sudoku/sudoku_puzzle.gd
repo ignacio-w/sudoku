@@ -9,14 +9,18 @@ var mistakes: int = 0 ## The number of mistakes the player has made.
 ## Places num at the given position and clears any notes there, since a
 ## filled cell can't also hold pencil marks. This is the ONLY place
 ## player_board should be written to during play.
-func set_value(row: int, col: int, num: int) -> void:
+func set_value(pos: Vector2i, num: int) -> void:
+	var row = pos.x
+	var col = pos.y
 	player_board[row][col] = num
 	(notes_board[row][col] as Array).clear()
 
 
 ## Toggles num in the notes at the given position. Returns true if the note
 ## was added, false if it was removed.
-func toggle_note(row: int, col: int, num: int) -> bool:
+func toggle_note(pos: Vector2i, num: int) -> bool:
+	var row = pos.x
+	var col = pos.y
 	if num in notes_board[row][col]:
 		notes_board[row][col].erase(num)
 		return false
@@ -26,8 +30,8 @@ func toggle_note(row: int, col: int, num: int) -> bool:
 
 
 ## Returns the current notes at the given position.
-func get_notes(row: int, col: int) -> Array[int]:
-	return notes_board[row][col]
+func get_notes(pos: Vector2i) -> Array[int]:
+	return notes_board[pos.x][pos.y]
 
 
 ## Prints the specified board to the console in an easy to see way.
@@ -37,8 +41,8 @@ func print_board(board: Array[Array]) -> void:
 
 
 ## Checks if the requested input matches the solution board.
-func is_solution(row: int, col: int, num: int) -> bool:
-	if num == solution_board[row][col]:
+func is_solution(pos: Vector2i, num: int) -> bool:
+	if num == solution_board[pos.x][pos.y]:
 		return true
 	return false
 

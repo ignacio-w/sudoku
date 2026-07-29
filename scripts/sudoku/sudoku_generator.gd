@@ -4,6 +4,7 @@ enum Difficulty {EASY, MEDIUM, HARD}
 
 var solver: SudokuSolver
 
+
 func _init() -> void:
 	solver = SudokuSolver.new()
 

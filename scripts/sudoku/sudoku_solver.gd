@@ -57,7 +57,7 @@ func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 ## the board is ambiguous (may not be actual number of solutions).
 func count_solutions(sudoku_board: Array[Array]) -> int:
 	# Find an empty cell
-	var empty_cell = SudokuRules.find_empty_cell(sudoku_board)
+	var empty_cell := SudokuRules.find_empty_cell(sudoku_board)
 	var row: int
 	var col: int
 	var solutions := 0
