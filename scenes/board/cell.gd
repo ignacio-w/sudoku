@@ -87,7 +87,7 @@ func emit_clicked_signal(input_validation: bool = true):
 				reset_highlight.emit()
 		# Cells that are clues can ONLY be highlighted
 		else:
-			if state != CellState.EQUAL_HIGHLIGHT:
+			if state != CellState.EQUAL_HIGHLIGHT and state != CellState.SELECTED:
 				cell_highlighted.emit(self)
 			else:
 				reset_highlight.emit()

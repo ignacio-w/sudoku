@@ -12,7 +12,6 @@ signal num_input_requested(cell: Cell, num: int, is_notes_mode: bool)
 
 func _ready() -> void:
 	mistake_label.text = "Mistakes: 0"
-	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	for child in number_selector.get_children():
 		child.queue_free()
 
@@ -80,11 +79,6 @@ func _on_num_button_clicked(num_button: NumberButton) -> void:
 	#if num_button.is_enabled:
 		## Put value in selected cell
 		#focused_cell.set_value(num_button.value)
-
-
-## Receives the cell_value_changed signal from the GameEvents autoload (cells).
-func _on_cell_value_changed(cell_changed: Cell) -> void:
-	update_number_button_active_state(cell_changed.value)
 
 
 ## Change all number buttons to note mode or normal mode.

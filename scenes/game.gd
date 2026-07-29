@@ -7,7 +7,6 @@ var puzzle: SudokuPuzzle
 func _ready() -> void:
 	puzzle = SudokuGenerator.new().generate(GameManager.cur_difficulty)
 	await game_ui.setup(puzzle.player_board)
-	#GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	game_ui.num_input_requested.connect(_on_num_input_request)
 
 
@@ -28,11 +27,12 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 	# NOTICE: Game currently validates inputs. 
 	# Check if placement @ pos matches solution
 	if puzzle.is_solution(row, col, num):
-		# Place number; display value
+		# Place number; display value; update buttons
 		puzzle.set_value(row, col, num)
 		cell.display_value(num)
+		game_ui.update_number_button_active_state(num)
 		
-		# Delete notes of equal values
+		# Delete notes of equal values around the board
 		var notes_positions = SudokuRules.get_potential_conflict_positions(cell.board_pos)
 		for pos in notes_positions:
 			var note_cell: Cell = game_ui.board.cell_grid[pos.x][pos.y]

@@ -1,4 +1,4 @@
-class_name BoardUI extends MarginContainer
+class_name BoardUI extends PanelContainer
 
 @onready var sudoku_grid: GridContainer = %SudokuGrid
 
@@ -24,6 +24,7 @@ func clear():
 ## represents what should be displayed on the board (0 = NOTHING; 1-9 = 1-9).
 func create_visual_board(sudoku_board: Array[Array]):
 	clear()
+	focused_cell = null
 	await get_tree().process_frame
 	board = sudoku_board
 	cell_grid = []
@@ -38,7 +39,7 @@ func create_visual_board(sudoku_board: Array[Array]):
 		cell_grid.append([])
 		cell_grid[row].resize(9)
 		for col in range(9):
-			var new_cell: Cell = CELL.instantiate() # Create celll
+			var new_cell: Cell = CELL.instantiate() # Create cell
 			cell_grid[row][col] = new_cell # Add cell to board variable
 			var subgrid_index := get_subgrid_index(Vector2i(row, col))
 			subgrids[subgrid_index].add_cell(new_cell) # Add cell to subgrid
@@ -112,6 +113,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var new_row: int = row
 	var new_col: int = col
 	
+	# Find next cell
 	if event.is_action("ui_right"):
 		if col < 8: new_col += 1
 	if event.is_action("ui_left"):
@@ -121,6 +123,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_action("ui_up"):
 		if row > 0: new_row -= 1
 	
+	# If action results in new focused cell, focus cell and set input as handled
 	if focused_cell.board_pos != Vector2i(new_row, new_col):
 		(cell_grid[new_row][new_col] as Cell).emit_clicked_signal()
 		get_viewport().set_input_as_handled()

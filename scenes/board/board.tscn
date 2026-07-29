@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://doo5b7jm7x3y8"]
+
+[ext_resource type="Script" uid="uid://ca2k7eo251ygv" path="res://scenes/board/board.gd" id="1_ef52f"]
+[ext_resource type="PackedScene" uid="uid://csn5uij01jy01" path="res://scenes/board/sub_grid.tscn" id="2_uhup1"]
+
+[node name="Board" type="PanelContainer" unique_id=726936825]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 565.0
+offset_bottom = 565.0
+script = ExtResource("1_ef52f")
+
+[node name="SudokuGrid" type="GridContainer" parent="." unique_id=925403689]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 3
+
+[node name="SubGrid" parent="SudokuGrid" unique_id=1508803001 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid2" parent="SudokuGrid" unique_id=860411082 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid3" parent="SudokuGrid" unique_id=517724373 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid4" parent="SudokuGrid" unique_id=2123392820 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid5" parent="SudokuGrid" unique_id=27543225 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid6" parent="SudokuGrid" unique_id=221543946 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid7" parent="SudokuGrid" unique_id=1593601430 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid8" parent="SudokuGrid" unique_id=1803709611 instance=ExtResource("2_uhup1")]
+layout_mode = 2
+
+[node name="SubGrid9" parent="SudokuGrid" unique_id=1059705019 instance=ExtResource("2_uhup1")]
+layout_mode = 2
