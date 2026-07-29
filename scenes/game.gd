@@ -2,11 +2,11 @@ extends Node
 
 @onready var game_ui: GameUI = $GameUI
 
-var game: SudokuPuzzle
+var puzzle: SudokuPuzzle
 
 func _ready() -> void:
-	game = SudokuGenerator.new().generate(GameManager.cur_difficulty)
-	await game_ui.setup(game.player_board)
+	puzzle = SudokuGenerator.new().generate(GameManager.cur_difficulty)
+	await game_ui.setup(puzzle.player_board)
 	GameEvents.cell_value_changed.connect(_on_cell_value_changed)
 	game_ui.num_input_requested.connect(_on_num_input_request)
 
@@ -19,10 +19,10 @@ func _on_cell_value_changed(cell: Cell):
 	var row: int = cell.board_pos.x
 	var col: int = cell.board_pos.y
 	# Update internal game board with new value
-	game.player_board[row][col] = cell.value
+	puzzle.player_board[row][col] = cell.value
 	
 	# Check if the player has won
-	if game.player_board == game.solution_board:
+	if puzzle.is_complete():
 		print("Board complete! Ending game...")
 		game_ui.stopwatch.stop()
 		await get_tree().create_timer(3).timeout
@@ -44,7 +44,7 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 	
 	# NOTICE: Game currently validates inputs. 
 	# Check if placement @ pos matches solution
-	if game.is_solution(row, col, num):
+	if puzzle.is_solution(row, col, num):
 		# Place number
 		cell.set_value(num)
 		
@@ -59,8 +59,8 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 		cell.cell_highlighted.emit(cell)
 	else:
 		# Add to mistakes
-		game.mistakes += 1
-		game_ui.update_mistakes(game.mistakes)
+		puzzle.mistakes += 1
+		game_ui.update_mistakes(puzzle.mistakes)
 		# Animate number button
 		num_button.animation_player.play("incorrect")
 	
