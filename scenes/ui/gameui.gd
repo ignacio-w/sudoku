@@ -35,8 +35,7 @@ func setup(board_array: Array[Array]):
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
 	
 	await board.create_visual_board(board_array)
-	for i in range(1, 10):
-		update_number_buttons_active_state()
+	update_number_buttons_active_state()
 	stopwatch.start(3)
 
 

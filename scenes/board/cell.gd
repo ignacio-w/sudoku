@@ -129,9 +129,9 @@ func display_value(num: int) -> void:
 		number_label.text = EMPTY
 	else:
 		number_label.text = str(value)
+	
 	# Clear all note visuals since filled cell can't show pencil marks
 	notes.clear()
-	for note in notes_container.get_children(): note.hide()
 	notes_container.hide()
 	number_label.show()
 

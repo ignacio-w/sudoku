@@ -38,17 +38,18 @@ func _place_num(input_cell: Cell, num: int) -> void:
 	# Before changing, add to move history
 	move_history.append(_snapshot_cells(affected_positions))
 	
-	# Place number, display value, update buttons, highlight equals, update notes
+	# Place number, display value, update buttons, update notes
 	puzzle.set_value(input_cell_pos, num)
 	input_cell.display_value(num)
 	game_ui.update_number_buttons_active_state()
-	input_cell.cell_highlighted.emit(input_cell)
-	
 	for pos in affected_positions:
 		if pos != input_cell_pos:
 			puzzle.toggle_note(pos, num) # Remove note
 			var note_cell: Cell = game_ui.board.cell_grid[pos.x][pos.y]
 			note_cell.display_notes(puzzle.get_notes(pos)) # Update display
+	
+	# Update highlighting
+	input_cell.cell_highlighted.emit(input_cell)
 	
 	# Check if the player has won
 	if puzzle.is_complete():
@@ -101,7 +102,13 @@ func _on_num_input_request(cell: Cell, num_button: NumberButton, note_mode: bool
 	print("Sent to Main for check!")
 
 
-## Undoes number placements. Does not undo note placement
+## Undoes number placements. 
+## - If the last action was a placement, it undoes the placement and restores
+## notes to their state before the placement (usually adds backs)
+## - If the last action was an erasure, it places the number back and restores
+## notes to their state before the erasure. (usually removes)
+## NOTE: There is only something to undo if a number was placed/removed. This 
+## does not undo note placements/removals.
 func _on_undo_requested() -> void:
 	# No history == nothing to undo
 	if move_history.is_empty():
@@ -109,41 +116,56 @@ func _on_undo_requested() -> void:
 	
 	# Get most recent move then remove from move_history
 	var move = move_history.pop_back()
+	
+	var undone_cell: Cell # Cell whose value is going to be undone
 	for entry in move:
-		# Place previous values in the most recently affected cell
+		var cell: Cell = game_ui.board.cell_grid[entry.row][entry.col]
+		# Undone cell is cell whose value will change (Cur value != prev value)
+		if puzzle.player_board[entry.row][entry.col] != entry.prev_value:
+			undone_cell = cell
+		# Place previous values/notes in cells affected by move
 		puzzle.player_board[entry.row][entry.col] = entry.prev_value
 		puzzle.notes_board[entry.row][entry.col] = entry.prev_notes
 		# Update visuals
-		var cell: Cell = game_ui.board.cell_grid[entry.row][entry.col]
 		cell.display_value(entry.prev_value)
 		cell.display_notes(entry.prev_notes)
-		game_ui.board.focus_cell(cell)
+	
+	# Focus undone cell; update UI buttons
+	game_ui.board.focus_cell(undone_cell)
+	game_ui.update_number_buttons_active_state()
 
 
-## Puts the solution to the currently focused or first cell.
+## Gives a hint to the user. The focused cell is solved for the user. If
+## there is no cell focused, it inputs the solution to the first available
+## cell if any. If there are no empty cells, this does nothing.
 func _on_hint_requested() -> void:
-	# Try to give a hint on the focused cell. If not, find first empty cell.
+	# Try to give a hint on the focused cell. If not, on first empty cell.
 	var target: Cell = game_ui.board.focused_cell
 	if target == null or target.value != 0:
 		target = _find_first_empty_cell()
-		if target == null: return # No empty cells = can't give hint
+		if target == null: return # No empty cells == can't give hint
 	var row := target.board_pos.x
 	var col := target.board_pos.y
 	# Place solution on cell
 	_place_num(target, puzzle.solution_board[row][col])
 	
 
-## Resets the value of the specified cell to zero. 
+## Resets the value of the focused cell to zero. Notes are not brought back
+## or changed in any way anywhere on the board.
 func _on_erase_requested() -> void:
 	var cell: Cell = game_ui.board.focused_cell
 	# Check if cell is focused and can be erased
 	if cell == null or cell.is_clue or cell.value == 0:
 		return
+	# Save cell state before erasure in case user wants to undo
 	move_history.append(_snapshot_cells([cell.board_pos]))
+	
+	# Reset cell, delete notes
 	puzzle.set_value(cell.board_pos, 0)
 	cell.display_value(0)
 	cell.display_notes([])
 	game_ui.board.focus_cell(cell)
+	game_ui.update_number_buttons_active_state()
 
 
 ## Returns the first empty cell on the board or null if there are no empty
