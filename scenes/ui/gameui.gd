@@ -18,6 +18,7 @@ func _ready() -> void:
 		child.queue_free()
 
 
+
 ## Sets up all visual nodes. Creates a visual Sudoku board given a 2D array of
 ## numbers representing the board. The given Sudoku board is reflected at the 
 ## start of the game. The given board should not a solved, solution board. Also

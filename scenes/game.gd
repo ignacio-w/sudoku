@@ -1,5 +1,7 @@
 extends Node
 
+const PAUSE_MENU = preload("uid://csufm8nmtlviw")
+
 var puzzle: SudokuPuzzle
 var move_history: Array ## Each element in this array represents an action by
 ## the player. Each action is an Array of cell information that was modified
@@ -19,7 +21,11 @@ func _ready() -> void:
 	puzzle = SudokuGenerator.new().generate(GameManager.cur_difficulty)
 	await game_ui.setup(puzzle.player_board)
 	game_ui.num_input_requested.connect(_on_num_input_request)
-	
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause"):
+		add_child(PAUSE_MENU.instantiate())
 
 
 ## Places the specified number in the specified cell. Updates notes across

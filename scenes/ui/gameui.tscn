@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://0tosdpqfeevk" path="res://scenes/ui/board_scaler.gd" id="2_5nrn4"]
 [ext_resource type="PackedScene" uid="uid://lvsotrxoqrq6" path="res://scenes/ui/number_button.tscn" id="3_nqx3d"]
 [ext_resource type="Script" uid="uid://dgeuyifnufd8f" path="res://scenes/ui/stopwatch.gd" id="4_bmdha"]
-[ext_resource type="PackedScene" uid="uid://cvsfpj4osg1ym" path="res://scenes/ui/action_bar.tscn" id="6_n64n4"]
+[ext_resource type="PackedScene" uid="uid://cvsfpj4osg1ym" path="res://scenes/ui/action_menu.tscn" id="6_n64n4"]
 
 [node name="GameUI" type="CanvasLayer" unique_id=217149648]
 script = ExtResource("1_gnl4o")
@@ -119,7 +119,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Notes Mode"
 
-[node name="ActionBar" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=1832336150 instance=ExtResource("6_n64n4")]
+[node name="ActionMenu" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=1028946684 instance=ExtResource("6_n64n4")]
 layout_mode = 2
 
 [connection signal="toggled" from="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer/NotesToggle" to="." method="_on_notes_toggle_toggled"]
