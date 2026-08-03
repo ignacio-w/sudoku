@@ -65,3 +65,48 @@ static func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: in
 			if sudoku_board[r + i][c + j] == num:
 				return false
 	return true
+
+
+## Returns a list of all numbers that could still legally be placed at the given
+## position (candidates). A filled cell does not have any candidates.
+static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
+	if board[pos.x][pos.y] != 0: # Filled cell == no candidates
+		return []
+	
+	var candidates: Array[int] = []
+	for num in range(1, 10):
+		if is_valid_num(board, pos.x, pos.y, num):
+			candidates.append(num)
+	return candidates
+
+
+## Returns all 27 units on a 9x9 board (9 rows, 9 columns, 9 boxes), each as a
+## list of the 9 cell positions belonging to it. Helps with human diffiuclty
+## rating since all techniques operate per-unit.
+static func get_units() -> Array[Array]:
+	var units: Array[Array] = []
+	
+	# Rows
+	for row in range(9):
+		var unit: Array[Vector2i] = []
+		for col in range(9):
+			unit.append(Vector2i(row, col))
+		units.append(unit)
+	
+	# Columns
+	for col in range(9):
+		var unit: Array[Vector2i] = []
+		for row in range(9):
+			unit.append(Vector2i(row, col))
+		units.append(unit)
+	
+	# Boxes/Subgrids
+	for box_row in range(3):
+		for box_col in range(3):
+			var unit: Array[Vector2i] = []
+			for in_row in range(3):
+				for in_col in range(3):
+					unit.append(Vector2i(box_row * 3 + in_row, box_col * 3 + in_col))
+			units.append(unit)
+	
+	return units
