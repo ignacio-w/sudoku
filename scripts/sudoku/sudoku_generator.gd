@@ -26,15 +26,17 @@ func _max_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
 
 ## Returns the minimum number of clues required for a board to have for this
 ## specified difficulty
-func _min_clues_for(difficulty: Difficulty) -> int:
+func _target_clues_for(difficulty: Difficulty) -> int:
 	match difficulty:
 		Difficulty.EASY:
-			return 36
+			return randi_range(36, 46)
 		Difficulty.MEDIUM:
-			return 30
+			return randi_range(30, 35)
 		Difficulty.HARD:
-			return 25
-	return 30
+			return randi_range(25, 29)
+	
+	push_error("Difficulty not accounted for. Target Clues will be -1")
+	return -1
 
 
 ## Creates and returns a Sudoku puzzle with a given difficulty.
@@ -73,7 +75,7 @@ func generate(difficulty: int) -> SudokuPuzzle:
 	
 	# Remove cells till target # of clues is hit or max # of cells have been removed
 	var max_tier := _max_tier_for(difficulty)
-	var min_clues := _min_clues_for(difficulty)
+	var target_clues := _target_clues_for(difficulty)
 	var clues := 81
 	
 	for cell in cells:
@@ -83,7 +85,7 @@ func generate(difficulty: int) -> SudokuPuzzle:
 		
 		# Stop removing clues when min clues has been reached, regardless of
 		# technique tier
-		if clues <= min_clues:
+		if clues <= target_clues:
 			break
 		board[row][col] = 0
 		

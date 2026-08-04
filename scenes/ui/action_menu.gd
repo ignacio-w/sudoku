@@ -5,11 +5,10 @@ extends VBoxContainer
 @onready var hint_button: Button = %HintButton
 @onready var hints: Label = %Hints
 
-var hints_given: int
+var hints_remaining: int = 3
 
 func _ready() -> void:
-	hints_given = 0
-	hints.text = "Hints left: 3"
+	hints.text = "Hints left: %d" % hints_remaining
 
 
 func _on_undo_button_pressed() -> void:
@@ -21,8 +20,8 @@ func _on_erase_button_pressed() -> void:
 
 
 func _on_hint_button_pressed() -> void:
-	hints_given += 1
-	hints.text = "Hints left: %d" % (3 - hints_given)
+	hints_remaining -= 1
+	hints.text = "Hints left: %d" % hints_remaining
 	GameEvents.emit_hint_requested()
-	if hints_given >= 3:
+	if hints_remaining == 0:
 		hint_button.disabled = true

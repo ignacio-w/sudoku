@@ -15,6 +15,14 @@ func _process(delta: float) -> void:
 		text = _format_time()
 		time_elapsed += delta
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_PAUSED:
+			add_theme_color_override("font_color", Color("b8ae42ff"))
+		NOTIFICATION_UNPAUSED:
+			add_theme_color_override("font_color", Color("ffffff"))
+			
+
 
 func _format_time() -> String:
 	var hours := floori(time_elapsed / 60 / 60)
@@ -45,7 +53,7 @@ func reset() -> void:
 ## to zero.
 func start(delay: float = 0) -> void:
 	paused = true
-	await get_tree().create_timer(delay).timeout
+	await get_tree().create_timer(delay, false).timeout
 	paused = false
 	add_theme_color_override("font_color", Color("ffffff"))
 

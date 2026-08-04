@@ -22,12 +22,6 @@ var cell_styles: Dictionary[String, StyleBoxFlat]
 @onready var number_label: Label = %Number
 @onready var notes_container: GridContainer = %NotesContainer
 
-# TODO: Cell selection
-# - Highlight cell
-# - Wait for input
-# - Display number input if number clicked
-# - When focus is gone, stop highlighting
-
 
 func _init() -> void:
 	is_clue = false
