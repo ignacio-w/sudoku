@@ -1,9 +1,13 @@
 extends CanvasLayer
 
+@onready var time: Label = %Time
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
+	
+	# TODO: Get time in a safer way
+	time.text = (get_parent().game_ui as GameUI).stopwatch.text
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -19,4 +23,4 @@ func _on_continue_button_pressed() -> void:
 
 
 func _on_quit_button_pressed() -> void:
-	pass # Replace with function body.
+	get_tree().quit(0)

@@ -1,9 +1,23 @@
 [gd_scene format=3 uid="uid://csufm8nmtlviw"]
 
 [ext_resource type="Script" uid="uid://lx3rg04tqabn" path="res://scenes/ui/pause_menu.gd" id="1_6tw0m"]
+[ext_resource type="Shader" uid="uid://dqeo4aigucpw5" path="res://resources/blur.gdshader" id="2_0lmf7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f6eus"]
+shader = ExtResource("2_0lmf7")
+shader_parameter/blur_lod = 4.00000019
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=754601720]
 script = ExtResource("1_6tw0m")
+
+[node name="BlurRect" type="ColorRect" parent="." unique_id=1877899843]
+material = SubResource("ShaderMaterial_f6eus")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.039215688)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1232917522]
 anchors_preset = 8
@@ -35,6 +49,13 @@ theme_override_font_sizes/font_size = 48
 text = "Game Paused"
 horizontal_alignment = 1
 
+[node name="Time" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1116827834]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "0:00"
+horizontal_alignment = 1
+
 [node name="ContinueButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1849992134]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
@@ -43,7 +64,7 @@ text = "Continue"
 [node name="QuitButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1347575667]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Quit to Main Menu"
+text = "Quit Game"
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

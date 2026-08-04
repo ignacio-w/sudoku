@@ -15,6 +15,7 @@ func _process(delta: float) -> void:
 		text = _format_time()
 		time_elapsed += delta
 
+
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_PAUSED:
