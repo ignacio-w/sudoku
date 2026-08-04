@@ -6,6 +6,9 @@ Answers: What is the least sophisticated technique needed, and does one even
 exist without guessing?
 
 """
+# TODO: Implement more techniques and tiers of difficulty to distinguish
+# - Better account for density of techniques available Ex. at least 2-3
+# singles were simultaneously findable at every step
 
 enum Tier {
 	SINGLES, # naked singles, hidden singles
@@ -29,7 +32,28 @@ func _is_solved(board: Array[Array]) -> bool:
 ## the implemented technqiues. This does not modify the board passed in.
 ## TODO: Add implementation
 func rate(board: Array[Array]) -> Tier:
-	return 0 as Tier
+	var working_board := board.duplicate(true)
+	var highest_tier_used := Tier.SINGLES
+	
+	while not _is_solved(working_board):
+		var progress := false
+		
+		# Try each technique, easiest to hardest, every time progress is made.
+		for technique in _techniques:
+			var tier: Tier = _techniques[technique]
+			
+			# All techniques return true/false; true == technique successful
+			if technique.call(working_board): 
+				highest_tier_used = max(highest_tier_used, tier)
+				progress = true
+				break
+		# After trying every technique, if no technique was successful,
+		# progress was not made in solving the board and it is unsolvable
+		# using currently implemented logical techniques
+		if not progress:
+			return Tier.UNSOLVABLE_LOGICALLY
+	
+	return highest_tier_used
 
 
 ## Attempts to input one number into the board by finding a naked single.

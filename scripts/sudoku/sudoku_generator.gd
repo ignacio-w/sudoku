@@ -3,10 +3,38 @@ class_name SudokuGenerator extends RefCounted
 enum Difficulty {EASY, MEDIUM, HARD}
 
 var solver: SudokuSolver
+var rater: SudokuDifficultyRater
 
 
 func _init() -> void:
 	solver = SudokuSolver.new()
+	rater = SudokuDifficultyRater.new()
+
+
+## Returns maximum technique tier for specified difficulty
+## TODO: Implement more tiers of difficulty for different difficlties
+func _max_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
+	match difficulty:
+		Difficulty.EASY:
+			return SudokuDifficultyRater.Tier.SINGLES
+		Difficulty.MEDIUM:
+			return SudokuDifficultyRater.Tier.SINGLES
+		Difficulty.HARD:
+			return SudokuDifficultyRater.Tier.SINGLES
+	return SudokuDifficultyRater.Tier.SINGLES
+
+
+## Returns the minimum number of clues required for a board to have for this
+## specified difficulty
+func _min_clues_for(difficulty: Difficulty) -> int:
+	match difficulty:
+		Difficulty.EASY:
+			return 36
+		Difficulty.MEDIUM:
+			return 30
+		Difficulty.HARD:
+			return 25
+	return 30
 
 
 ## Creates and returns a Sudoku puzzle with a given difficulty.
@@ -23,7 +51,7 @@ func generate(difficulty: int) -> SudokuPuzzle:
 		for col in range(9):
 			puzzle.notes_board[row][col] = [] as Array[int]
 	
-	# Create an empty board
+	# Create empty player board
 	var board: Array[Array] = []
 	board.resize(9)
 	for row in range(9):
@@ -43,36 +71,34 @@ func generate(difficulty: int) -> SudokuPuzzle:
 			cells.append(Vector2i(row_i, col_i))
 	cells.shuffle()
 	
-	# TODO: Determine number of clues to give; add difficulty options
-	# Make difficulty algorithm more complex; make algorithm more accurately
-	# reflect puzzle difficulty as opposed to just based on # of clues
-	var target_clues: int
-	match difficulty:
-		Difficulty.EASY:
-			target_clues = randi_range(36, 46)
-		Difficulty.MEDIUM:
-			target_clues = randi_range(30, 35)
-		Difficulty.HARD:
-			target_clues = randi_range(25, 29)
-	
 	# Remove cells till target # of clues is hit or max # of cells have been removed
+	var max_tier := _max_tier_for(difficulty)
+	var min_clues := _min_clues_for(difficulty)
 	var clues := 81
+	
 	for cell in cells:
-		if clues <= target_clues:
-			break
-		
 		var row = cell.x
 		var col = cell.y
 		var solution_value = board[row][col]
 		
+		# Stop removing clues when min clues has been reached, regardless of
+		# technique tier
+		if clues <= min_clues:
+			break
 		board[row][col] = 0
 		
-		# Check # of solutions; if only one unique solution, we can safely remove clue
+		# Check #1: Can't remove clue if solution count is not 1
 		if solver.count_solutions(board) != 1:
 			board[row][col] = solution_value
-		else:
-			clues -= 1
-	
+			continue
+		
+		# Check #2: Technique difficulty mustn't exceed max for this difficulty
+		if rater.rate(board) > max_tier:
+			board[row][col] = solution_value
+			continue
+		
+		clues -= 1
+		
 	print("Level ", str(difficulty), " board generated with ", str(clues), " clues.")
 	puzzle.player_board = board
 	
