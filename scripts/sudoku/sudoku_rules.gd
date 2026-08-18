@@ -68,7 +68,8 @@ static func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: in
 
 
 ## Returns a list of all numbers that could still legally be placed at the given
-## position (candidates). A filled cell does not have any candidates.
+## position (candidates). Fills in numerical order (eg. [1, 4, 7]; never [4, 7, 1]).
+## A filled cell does not have any candidates.
 static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
 	if board[pos.x][pos.y] != 0: # Filled cell == no candidates
 		return []
@@ -80,33 +81,47 @@ static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
 	return candidates
 
 
-## Returns all 27 units on a 9x9 board (9 rows, 9 columns, 9 boxes), each as a
-## list of the 9 cell positions belonging to it. Helps with human diffiuclty
-## rating since all techniques operate per-unit.
+## Returns all 27 units on a 9x9 board (9 rows, 9 columns, 9 boxes in that
+## order), each as a list of the 9 cell positions belonging to it. Helps with
+## human diffiuclty rating since all techniques operate per-unit.
 static func get_units() -> Array[Array]:
 	var units: Array[Array] = []
-	
-	# Rows
+	units.append_array(get_rows())
+	units.append_array(get_cols())
+	units.append_array(get_boxes())
+	return units
+
+
+## Returns the 9 rows, each as a list of the 9 cell positions in it.
+static func get_rows() -> Array[Array]:
+	var rows: Array[Array] = []
 	for row in range(9):
 		var unit: Array[Vector2i] = []
 		for col in range(9):
 			unit.append(Vector2i(row, col))
-		units.append(unit)
-	
-	# Columns
+		rows.append(unit)
+	return rows
+
+
+## Returns the 9 columns, each as a list of the 9 cell positions in it.
+static func get_cols() -> Array[Array]:
+	var cols: Array[Array] = []
 	for col in range(9):
 		var unit: Array[Vector2i] = []
 		for row in range(9):
 			unit.append(Vector2i(row, col))
-		units.append(unit)
-	
-	# Boxes/Subgrids
+		cols.append(unit)
+	return cols
+
+
+## Returns the 9 boxes, each as a list of the 9 cell positions in it.
+static func get_boxes() -> Array[Array]:
+	var boxes: Array[Array] = []
 	for box_row in range(3):
 		for box_col in range(3):
 			var unit: Array[Vector2i] = []
-			for in_row in range(3):
-				for in_col in range(3):
-					unit.append(Vector2i(box_row * 3 + in_row, box_col * 3 + in_col))
-			units.append(unit)
-	
-	return units
+			for i in range(3):
+				for j in range(3):
+					unit.append(Vector2i(box_row * 3 + i, box_col * 3 + j))
+			boxes.append(unit)
+	return boxes

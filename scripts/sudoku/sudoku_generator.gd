@@ -12,15 +12,15 @@ func _init() -> void:
 
 
 ## Returns maximum technique tier for specified difficulty
-## TODO: Implement more tiers of difficulty for different difficlties
+## TODO: Implement more tiers of difficulty for different difficulties
 func _max_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
 	match difficulty:
 		Difficulty.EASY:
 			return SudokuDifficultyRater.Tier.SINGLES
 		Difficulty.MEDIUM:
-			return SudokuDifficultyRater.Tier.SINGLES
+			return SudokuDifficultyRater.Tier.POINTING_PAIRS
 		Difficulty.HARD:
-			return SudokuDifficultyRater.Tier.SINGLES
+			return SudokuDifficultyRater.Tier.POINTING_PAIRS
 	return SudokuDifficultyRater.Tier.SINGLES
 
 
@@ -77,31 +77,34 @@ func generate(difficulty: int) -> SudokuPuzzle:
 	var max_tier := _max_tier_for(difficulty)
 	var target_clues := _target_clues_for(difficulty)
 	var clues := 81
-	
+	var actual_max_tier_used := SudokuDifficultyRater.Tier.SINGLES # for testing
 	for cell in cells:
 		var row = cell.x
 		var col = cell.y
 		var solution_value = board[row][col]
 		
-		# Stop removing clues when min clues has been reached, regardless of
+		# Stop removing clues if # min clues has been reached, regardless of
 		# technique tier
 		if clues <= target_clues:
 			break
 		board[row][col] = 0
 		
-		# Check #1: Can't remove clue if solution count is not 1
+		# Check #1: Board must have only 1 unique solution if clue were to be removed
 		if solver.count_solutions(board) != 1:
 			board[row][col] = solution_value
 			continue
 		
-		# Check #2: Technique difficulty mustn't exceed max for this difficulty
-		if rater.rate(board) > max_tier:
+		# Check #2: Technique difficulty to solve board mustn't exceed max for this difficulty
+		var rating = rater.rate(board)
+		if rating > max_tier:
 			board[row][col] = solution_value
 			continue
+		actual_max_tier_used = max(rating, actual_max_tier_used)
 		
 		clues -= 1
 		
 	print("Level ", str(difficulty), " board generated with ", str(clues), " clues.")
+	print("Most difficult technique used: " + str(actual_max_tier_used))
 	puzzle.player_board = board
 	
 	return puzzle
