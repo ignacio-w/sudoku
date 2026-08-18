@@ -11,6 +11,18 @@ func _init() -> void:
 	rater = SudokuDifficultyRater.new()
 
 
+## Returns minimum technique tier for specified difficulty
+## TODO: Implement more tiers of difficulty for different difficulties
+func _min_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
+	match difficulty:
+		Difficulty.EASY:
+			return SudokuDifficultyRater.Tier.SINGLES
+		Difficulty.MEDIUM:
+			return SudokuDifficultyRater.Tier.NAKED_PAIRS
+		Difficulty.HARD:
+			return SudokuDifficultyRater.Tier.POINTING_PAIRS
+	return SudokuDifficultyRater.Tier.SINGLES
+
 ## Returns maximum technique tier for specified difficulty
 ## TODO: Implement more tiers of difficulty for different difficulties
 func _max_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
@@ -39,8 +51,31 @@ func _target_clues_for(difficulty: Difficulty) -> int:
 	return -1
 
 
-## Creates and returns a Sudoku puzzle with a given difficulty.
-func generate(difficulty: int) -> SudokuPuzzle:
+## Creates and returns a Sudoku puzzle with a given difficulty. Makes sure
+## the puzzle generated meets a minimum difficulty threshold by attempting
+## to generate the board multiple times until the difficulty is met.
+## TODO: Medium/hard difficulty takes a while to generate. Improve generation
+## speed.
+func generate(difficulty: Difficulty = Difficulty.EASY) -> SudokuPuzzle:
+	var min_tier := _min_tier_for(difficulty)
+	var max_attempts := 25
+	
+	var puzzle: SudokuPuzzle
+	# Attempt to generate board "max_attempts" attempts
+	for attempt in range(max_attempts):
+		puzzle = _generate_attempt(difficulty)
+		var tier := rater.rate(puzzle.player_board)
+		if tier >= min_tier:
+			print("Reached min target on attempt %d" % (attempt + 1))
+			return puzzle
+	
+	push_warning("Couldn't reach minimum difficuly after %d attempts; returning last attempt." % max_attempts)
+	return puzzle
+
+## Main method to generate a SudokuPuzzle with a given difficulty. Makes sure
+## difficulty of puzzle does not exceed the max technique tier for that
+## difficulty.
+func _generate_attempt(difficulty: Difficulty) -> SudokuPuzzle:
 	# Construct empty SudokuPuzzle
 	var puzzle := SudokuPuzzle.new()
 	

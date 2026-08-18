@@ -12,15 +12,15 @@ exist without guessing?
 
 enum Tier {
 	SINGLES, # naked singles, hidden singles
-	PAIRS,
-	POINTING_PAIRS,
+	NAKED_PAIRS, # naked pairs
+	POINTING_PAIRS, # pointing pairs/triples
 	UNSOLVABLE_LOGICALLY, # technique not implemented
 }
 
 var _techniques: Dictionary[Callable, Tier] = {
 	_apply_naked_single: Tier.SINGLES,
 	_apply_hidden_single: Tier.SINGLES,
-	_apply_naked_pair: Tier.PAIRS,
+	_apply_naked_pair: Tier.NAKED_PAIRS,
 	_apply_pointing_pair: Tier.POINTING_PAIRS,
 }
 
@@ -150,18 +150,23 @@ func _apply_hidden_single(board: Array[Array], candidates: Array[Array]) -> bool
 
 ## Finds a naked pair and eliminates those as candidates from cells in the
 ## unit the naked pair was found in.
-## A naked pair is a pair of candidate numbers sitted in cells that belong to
-## a unit in common. This makes it clear that the solution will contain those
+## A naked pair is a set of 2 candidate numbers sitting in 2 cells that share at
+## least 1 common unit. This makes it clear that the solution will contain those
 ## values in those 2 cells, so they can be erased as candidates from all other
-## cells in that unit. See: https://www.sudokuwiki.org/Naked_Candidates#NP
+## cells in the units in common. Returns true if the naked pair allows for a
+## reduction in candidates in other cells, returns false otherwise.
+## See for explanation: https://www.sudokuwiki.org/Naked_Candidates#NP
 func _apply_naked_pair(board: Array[Array], candidates: Array[Array]):
 	var board_units := SudokuRules.get_units()
 	for unit in board_units:
+		# Find cells that contain exactly 2 candidates
 		var pair_cells: Array[Vector2i] = []
 		for pos in unit:
 			if candidates[pos.x][pos.y].size() == 2:
 				pair_cells.append(pos)
-		
+			
+		# Now test every combination of cell pairs to check if the candidates
+		# in the cells are equal
 		for index_a in range(pair_cells.size()):
 			for index_b in range(index_a + 1, pair_cells.size()):
 				var pos_a := pair_cells[index_a]
@@ -169,8 +174,8 @@ func _apply_naked_pair(board: Array[Array], candidates: Array[Array]):
 				# Are candidates in the 2 cells equal?
 				if candidates[pos_a.x][pos_a.y] == candidates[pos_b.x][pos_b.y]:
 					
-					# Naked pair found! Try to remove candidates from
-					# other cells in all units they share
+					# Naked pair found! Try to remove candidates from other
+					# cells in all units they share
 					var eliminated := false
 					var shared_units = _units_containing_pos(board_units, [pos_a, pos_b])
 					for shared_unit in shared_units:
@@ -188,7 +193,8 @@ func _apply_naked_pair(board: Array[Array], candidates: Array[Array]):
 ## In short, if a candidate appears 2-3 times in a box and they happen to
 ## align on the same row or col, we can remove the num from the list of
 ## candidates of all cells in the same row/col. This works for pointing pairs
-## and pointing triples.
+## and pointing triples. Returns true if the pointing pair/triple allows for a
+## reduction in candidates in other cells, returns false otherwise.
 ## See for explanation: https://www.sudokuwiki.org/Intersection_Removal
 func _apply_pointing_pair(board: Array[Array], candidates: Array[Array]):
 	# Check each box for a pointing pair/triple, within each box check each num
@@ -199,8 +205,8 @@ func _apply_pointing_pair(board: Array[Array], candidates: Array[Array]):
 				if num in candidates[pos.x][pos.y]:
 					cells_with_num.append(pos)
 			
-			# Need at least 2 cells with candidate in box. Allows func to work
-			# with pointing triples as well.
+			# Need at least 2 cells with same candidate in box. Allows func to
+			# work with pointing triples as well.
 			if cells_with_num.size() < 2:
 				continue
 			
