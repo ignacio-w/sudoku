@@ -1,2 +1,2 @@
-# sodoku
-A Sodoku game in Godot!
+# sudoku
+A Sudoku game in Godot!
