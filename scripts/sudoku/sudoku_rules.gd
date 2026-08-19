@@ -40,6 +40,27 @@ static func find_empty_cell(sudoku_board: Array[Array]) -> Vector2i:
 	return Vector2i(-1, -1)
 
 
+## Finds the empty cell with the FEWEST legal candidates. Trying the most
+## constrained cell first means backtracking fails fast on dead branches
+## instead of wandering deep into unproductive ones.
+static func find_most_constrained_cell(sudoku_board: Array[Array]) -> Vector2i:
+	var best_pos := Vector2i(-1, -1)
+	var best_count := 10  # more than any real candidate count
+
+	for row in range(9):
+		for col in range(9):
+			if sudoku_board[row][col] != 0:
+				continue
+			var count: int = get_candidates(sudoku_board, Vector2i(row, col)).size()
+			if count == 0:
+				return Vector2i(row, col)  # dead end — bail out immediately
+			if count < best_count:
+				best_count = count
+				best_pos = Vector2i(row, col)
+
+	return best_pos
+
+
 ## Checks to see if the number at the specified row and col would be a valid 
 ## placement on the given board. In a normal game of Sudoku this means the
 ## number is not already found in the position's row, column, or subgrid. [br]
@@ -53,7 +74,7 @@ static func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: in
 		if sudoku_board[row][i] == num and i!= col:
 			return false
 	
-	# Check subgrid
+	# Check subgrid/box
 	@warning_ignore("integer_division")
 	var r: int = row / 3 * 3
 	@warning_ignore("integer_division")
@@ -67,18 +88,59 @@ static func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: in
 	return true
 
 
-## Returns a list of all numbers that could still legally be placed at the given
-## position (candidates). Fills in numerical order (eg. [1, 4, 7]; never [4, 7, 1]).
-## A filled cell does not have any candidates.
+### Returns a list of all numbers that could still legally be placed at the given
+### position (candidates). Fills in numerical order (eg. [1, 4, 7]; never [4, 7, 1]).
+### A filled cell does not have any candidates. Uses bitmasks to do this,
+## optimizing for speed.
 static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
-	if board[pos.x][pos.y] != 0: # Filled cell == no candidates
+	var row := pos.x
+	var col := pos.y
+	
+	if board[row][col] != 0: # Filled cell == no candidates
 		return []
+	
+	var used := 0
+	# used = 000000000
+	# Each digit represents numbers 1-9; if found in row/col; turn digit to 1
+	for i in range(9):
+		if board[row][i] != 0:
+			used |= 1 << (board[row][i] - 1)
+		if board[i][col] != 0:
+			used |= 1 << (board[i][col] - 1)
+	
+	# Check subgrid/box
+	@warning_ignore("integer_division")
+	var r: int = row / 3 * 3
+	@warning_ignore("integer_division")
+	var c: int = col / 3 * 3
+	for i in range(3):
+		for j in range(3):
+			var num = board[r + i][c + j]
+			if num != 0:
+				used |= 1 << (num - 1)
 	
 	var candidates: Array[int] = []
 	for num in range(1, 10):
-		if is_valid_num(board, pos.x, pos.y, num):
+		# Candidate if bit is not set (0)
+		if (used & 1 << (num - 1)) == 0:
 			candidates.append(num)
 	return candidates
+
+
+## Returns the list of candidate numbers (1-9) that could still legally be
+## placed at the given position. Empty if the cell is already filled.
+#static func get_candidates(sudoku_board: Array[Array], pos: Vector2i) -> Array[int]:
+	#var row := pos.x
+	#var col := pos.y
+	#
+	#if sudoku_board[row][col] != 0:
+		#return []
+	#
+	#var candidates: Array[int] = []
+	#for num in range(1, 10):
+		#if is_valid_num(sudoku_board, row, col, num):
+			#candidates.append(num)
+	#return candidates
 
 
 ## Returns all 27 units on a 9x9 board (9 rows, 9 columns, 9 boxes in that

@@ -20,8 +20,8 @@ func solve(sudoku_board: Array[Array]):
 ## If you don't want your inital board to be modified, use [method Sudoku.solve]
 ## to get a copy of the solved board instead.
 func _solve_recursive(sudoku_board: Array[Array]) -> bool:
-	# Find an empty cell
-	var empty_cell := SudokuRules.find_empty_cell(sudoku_board)
+	# Find most constrained cell (least candidates)
+	var empty_cell := SudokuRules.find_most_constrained_cell(sudoku_board)
 	
 	# If there are no empty cells val of (-1, -1), board solution was found; END
 	if empty_cell == Vector2i(-1, -1):
@@ -56,8 +56,8 @@ func _solve_recursive(sudoku_board: Array[Array]) -> bool:
 ## 1 if there is only 1 solution, and a number greater than 1 if the solution to
 ## the board is ambiguous (may not be actual number of solutions).
 func count_solutions(sudoku_board: Array[Array]) -> int:
-	# Find an empty cell
-	var empty_cell := SudokuRules.find_empty_cell(sudoku_board)
+	# Find most constrained cell (least candidates)
+	var empty_cell := SudokuRules.find_most_constrained_cell(sudoku_board)
 	var row: int
 	var col: int
 	var solutions := 0
