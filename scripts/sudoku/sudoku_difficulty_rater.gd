@@ -11,17 +11,20 @@ exist without guessing?
 # singles were simultaneously findable at every step
 
 enum Tier {
-	SINGLES, # naked singles, hidden singles
-	NAKED_PAIRS, # naked pairs
+	SINGLES, # naked/hidden singles
+	PAIRS, # naked/hidden pairs
 	POINTING_PAIRS, # pointing pairs/triples
+	BOX_LINE_REDUCTION, # box/line reduction
 	UNSOLVABLE_LOGICALLY, # technique not implemented
 }
 
 var _techniques: Dictionary[Callable, Tier] = {
 	_apply_naked_single: Tier.SINGLES,
 	_apply_hidden_single: Tier.SINGLES,
-	_apply_naked_pair: Tier.NAKED_PAIRS,
+	_apply_naked_pair: Tier.PAIRS,
+	_apply_hidden_pair: Tier.PAIRS,
 	_apply_pointing_pair: Tier.POINTING_PAIRS,
+	_apply_box_line_reduction: Tier.BOX_LINE_REDUCTION,
 }
 
 ## Returns true if the given board is solved, false otherwise.
@@ -115,11 +118,23 @@ func rate(board: Array[Array]) -> Tier:
 	return highest_tier_used
 
 
-## Attempts to input one number into the board by finding a naked single.
-## A naked (obvious) single is a cell with exactly one candidate and is the simplest
-## solving technqiue. After analyzing a cell's row, col, and subgrid, there
-## should only be one number (1-9) not found.
-## Returns true if a naked single was found and placed, false otherwise.
+"""
+============================HUMAN SOLVING TECHNIQUES============================
+
+This website contains information for most of the techniques: 
+	https://www.sudokuwiki.org/sudoku.htm
+
+- Naked/Hidden Singles
+- Naked/Hidden Pairs
+- Pointing Pairs/Triples
+- Box-Line Reduction
+"""
+
+## A naked (obvious) single is a cell with exactly one candidate. After
+## analyzing a cell's row, col, and subgrid, there should only be one number
+## (1-9) not found. Attempts to input one number into the board by finding a
+## naked single. Returns true if a naked single was found and placed,
+## false otherwise.
 func _apply_naked_single(board: Array[Array], candidates: Array[Array]) -> bool:
 	for row in range(9):
 		for col in range(9):
@@ -130,10 +145,10 @@ func _apply_naked_single(board: Array[Array], candidates: Array[Array]) -> bool:
 	return false
 
 
-## Attempts to input one number into the board by finding a hidden single.
 ## A hidden single is where a number (1-9) only has one legal cell it could go
-## in within a unit (row/col/box).
-## Returns true if a hidden single was found and placed, false otherwise.
+## in within a unit (row/col/box). Attempts to input one number into the board
+## by finding a hidden single. Returns true if a hidden single was found and
+## placed, false otherwise.
 func _apply_hidden_single(board: Array[Array], candidates: Array[Array]) -> bool:
 	for unit in SudokuRules.get_units():
 		# Test each number in each position in unit
@@ -148,15 +163,17 @@ func _apply_hidden_single(board: Array[Array], candidates: Array[Array]) -> bool
 				return true
 	return false
 
-## Finds a naked pair and eliminates those as candidates from cells in the
-## unit the naked pair was found in.
-## A naked pair is a set of 2 candidate numbers sitting in 2 cells that share at
-## least 1 common unit. This makes it clear that the solution will contain those
-## values in those 2 cells, so they can be erased as candidates from all other
-## cells in the units in common. Returns true if the naked pair allows for a
-## reduction in candidates in other cells, returns false otherwise.
+
+## A naked pair is a set of exactly 2 candidate numbers sitting in 2 cells that
+## share at least 1 common unit. This makes it clear that the solution will 
+## contain those values in those 2 cells, so they can be erased as candidates
+## from all other cells in the units in common. Finds a naked pair and
+## attempts to eliminate those as candidates from cells in the unit the pair was
+## found in. Returns true if the naked pair reduced the number of candidates in
+## the shared units, returns false otherwise.
 ## See for explanation: https://www.sudokuwiki.org/Naked_Candidates#NP
-func _apply_naked_pair(board: Array[Array], candidates: Array[Array]):
+@warning_ignore("unused_parameter")
+func _apply_naked_pair(board: Array[Array], candidates: Array[Array]) -> bool:
 	var board_units := SudokuRules.get_units()
 	for unit in board_units:
 		# Find cells that contain exactly 2 candidates
@@ -173,7 +190,6 @@ func _apply_naked_pair(board: Array[Array], candidates: Array[Array]):
 				var pos_b := pair_cells[index_b]
 				# Are candidates in the 2 cells equal?
 				if candidates[pos_a.x][pos_a.y] == candidates[pos_b.x][pos_b.y]:
-					
 					# Naked pair found! Try to remove candidates from other
 					# cells in all units they share
 					var eliminated := false
@@ -190,13 +206,59 @@ func _apply_naked_pair(board: Array[Array], candidates: Array[Array]):
 						return true
 	return false
 
+
+## A hidden pair is a set of 2 candidate numbers sitting in 2 cells that
+## share at least 1 common unit. This makes it clear that the solution will 
+## contain those values in those 2 cells, so all other candidates in those cells
+## can be removed. Attempts to find a hidden pair and eliminate all other
+## candidates in the cells they were found in. Returns true if the hidden pair
+## reduced the number of candidates in those cells, returns false otherwise.
+## See for explanation: https://www.sudokuwiki.org/Hidden_Candidates#NP
+@warning_ignore("unused_parameter")
+func _apply_hidden_pair(board: Array[Array], candidates: Array[Array]) -> bool:
+	for unit in SudokuRules.get_units():
+		var num_locations := {}
+		for num in range(1, 10):
+			num_locations[num] = []
+		for pos in unit:
+			for num in candidates[pos.x][pos.y]:
+				num_locations[num].append(pos)
+		
+		# Filter candidates that appear EXACTLY twice in the unit
+		var pair_candidates: Array[int] = []
+		for num in range(1, 10):
+			if num_locations[num].size() == 2:
+				pair_candidates.append(num)
+		
+		# Test every pair of candidates to see if they occupy same 2 cells
+		for index_a in range(pair_candidates.size()):
+			for index_b in range(index_a + 1, pair_candidates.size()):
+				var num_a := pair_candidates[index_a]
+				var num_b := pair_candidates[index_b]
+				
+				# Hidden pair found! Remove all other candidates in the two
+				# cells they're found in
+				if num_locations[num_a] == num_locations[num_b]:
+					var hidden_pair := [num_a, num_b]
+					var eliminated := false
+					for pos in num_locations[num_a]:
+						for candidate in candidates[pos.x][pos.y].duplicate():
+							if candidate not in hidden_pair:
+								candidates[pos.x][pos.y].erase(candidate)
+								eliminated = true
+					if eliminated:
+						return true
+	return false
+
+
 ## In short, if a candidate appears 2-3 times in a box and they happen to
 ## align on the same row or col, we can remove the num from the list of
 ## candidates of all cells in the same row/col. This works for pointing pairs
-## and pointing triples. Returns true if the pointing pair/triple allows for a
-## reduction in candidates in other cells, returns false otherwise.
+## and pointing triples. Returns true if the pointing pair/triple reduced the
+## number of candidates in other cells, returns false otherwise.
 ## See for explanation: https://www.sudokuwiki.org/Intersection_Removal
-func _apply_pointing_pair(board: Array[Array], candidates: Array[Array]):
+@warning_ignore("unused_parameter")
+func _apply_pointing_pair(board: Array[Array], candidates: Array[Array]) -> bool:
 	# Check each box for a pointing pair/triple, within each box check each num
 	for box in SudokuRules.get_boxes():
 		for num in range(1, 10):
@@ -221,6 +283,7 @@ func _apply_pointing_pair(board: Array[Array], candidates: Array[Array]):
 			# Get all the pos of the row/col the pointing pair/triple is on
 			var line: Array[Vector2i] = _row_cells(first.x) if same_row else _col_cells(first.y)
 			
+			# Eliminate num from list of candidates in all other cells in line
 			var eliminated := false
 			for pos in line:
 				if pos in box:
@@ -231,3 +294,58 @@ func _apply_pointing_pair(board: Array[Array], candidates: Array[Array]):
 			if eliminated:
 				return true
 	return false
+
+
+## In short, if we find the same candidate in any row/col, grouped together in
+## the same box, we can remove that candidate from all the other cells in that
+## box. Returns true if this strategy successfuly removed candidates, false
+## otherwise.
+## See for explanation: https://www.sudokuwiki.org/Intersection_Removal#LBR
+@warning_ignore("unused_parameter")
+func _apply_box_line_reduction(board: Array[Array], candidates: Array[Array]) -> bool:
+	var lines: Array[Array] = []
+	lines.append_array(SudokuRules.get_rows())
+	lines.append_array(SudokuRules.get_cols())
+	
+	for line in lines:
+		for num in range(1, 10):
+			var cells_with_num: Array[Vector2i] = []
+			for pos in line:
+				if num in candidates[pos.x][pos.y]:
+					cells_with_num.append(pos)
+			
+			# Num must appear multiple times in line to use this strategy.
+			if cells_with_num.size() < 2:
+				continue
+			
+			# Find box containing first cell
+			var first := cells_with_num[0]
+			var target_box: Array[Vector2i]
+			for box in SudokuRules.get_boxes():
+				if first in box:
+					target_box = box
+					break
+ 			
+			# Check if all other cells_with_num are in this box.
+			var confined_to_box := true
+			for pos in cells_with_num:
+				if pos not in target_box:
+					confined_to_box = false
+					break
+			# All candidates must be in same box to use this strategy.
+			if not confined_to_box:
+				continue
+			
+			# Eliminate num from list of candidates in all other cells in box
+			var eliminated := false
+			for pos in target_box:
+				if pos in line:
+					continue  # cells on the line are handled by other techniques
+				if num in candidates[pos.x][pos.y]:
+					candidates[pos.x][pos.y].erase(num)
+					eliminated = true
+ 			
+			if eliminated:
+				return true
+	return false
+ 

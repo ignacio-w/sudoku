@@ -18,7 +18,7 @@ func _min_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
 		Difficulty.EASY:
 			return SudokuDifficultyRater.Tier.SINGLES
 		Difficulty.MEDIUM:
-			return SudokuDifficultyRater.Tier.NAKED_PAIRS
+			return SudokuDifficultyRater.Tier.PAIRS
 		Difficulty.HARD:
 			return SudokuDifficultyRater.Tier.POINTING_PAIRS
 	return SudokuDifficultyRater.Tier.SINGLES
@@ -32,23 +32,23 @@ func _max_tier_for(difficulty: Difficulty) -> SudokuDifficultyRater.Tier:
 		Difficulty.MEDIUM:
 			return SudokuDifficultyRater.Tier.POINTING_PAIRS
 		Difficulty.HARD:
-			return SudokuDifficultyRater.Tier.POINTING_PAIRS
+			return SudokuDifficultyRater.Tier.BOX_LINE_REDUCTION
 	return SudokuDifficultyRater.Tier.SINGLES
 
 
 ## Returns the minimum number of clues required for a board to have for this
 ## specified difficulty
-func _target_clues_for(difficulty: Difficulty) -> int:
+func _min_clues_for(difficulty: Difficulty) -> int:
 	match difficulty:
 		Difficulty.EASY:
-			return randi_range(36, 46)
+			return 34
 		Difficulty.MEDIUM:
-			return randi_range(30, 35)
+			return 28
 		Difficulty.HARD:
-			return randi_range(25, 29)
+			return 22
 	
-	push_error("Difficulty not accounted for. Target Clues will be -1")
-	return -1
+	push_warning("Difficulty not accounted for. Will default to medium")
+	return 28
 
 
 ## Creates and returns a Sudoku puzzle with a given difficulty. Makes sure
@@ -128,7 +128,7 @@ func _attempt_create_puzzle(solution_board: Array[Array], difficulty: Difficulty
 	
 	# Remove cells till target # of clues is hit or max # of cells have been removed
 	var max_tier := _max_tier_for(difficulty)
-	var target_clues := _target_clues_for(difficulty)
+	var min_clues := _min_clues_for(difficulty)
 	var clues := 81
 	var failures := 0
 	var actual_max_tier_used := SudokuDifficultyRater.Tier.SINGLES # for testing
@@ -139,7 +139,7 @@ func _attempt_create_puzzle(solution_board: Array[Array], difficulty: Difficulty
 		
 		# Stop removing clues if # min clues has been reached, regardless of
 		# technique tier
-		if clues <= target_clues:
+		if clues <= min_clues:
 			break
 		
 		# Remove clue; perform checks
