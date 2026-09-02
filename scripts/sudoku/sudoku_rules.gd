@@ -51,13 +51,14 @@ static func find_most_constrained_cell(sudoku_board: Array[Array]) -> Vector2i:
 		for col in range(9):
 			if sudoku_board[row][col] != 0:
 				continue
+			# Get # of candidates for pos
 			var count: int = get_candidates(sudoku_board, Vector2i(row, col)).size()
 			if count == 0:
-				return Vector2i(row, col)  # dead end — bail out immediately
+				return Vector2i(row, col)  # can't be more constrained than 0 candidates
 			if count < best_count:
 				best_count = count
 				best_pos = Vector2i(row, col)
-
+	
 	return best_pos
 
 
@@ -90,8 +91,8 @@ static func is_valid_num(sudoku_board: Array[Array], row: int, col: int, num: in
 
 ### Returns a list of all numbers that could still legally be placed at the given
 ### position (candidates). Fills in numerical order (eg. [1, 4, 7]; never [4, 7, 1]).
-### A filled cell does not have any candidates. Uses bitmasks to do this,
-## optimizing for speed.
+### A filled cell does not have any candidates. Uses bitmasks to do this, to
+## increase speed.
 static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
 	var row := pos.x
 	var col := pos.y

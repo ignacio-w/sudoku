@@ -1,6 +1,7 @@
 extends Node
 
 var cur_difficulty: SudokuGenerator.Difficulty
+var pending_puzzle: SudokuPuzzle # for future use (loading screen)
 
 # Settings
 var visual_guides: bool = true ## Number & note highlighing

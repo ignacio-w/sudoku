@@ -18,13 +18,16 @@ func _ready() -> void:
 	GameEvents.hint_requested.connect(_on_hint_requested)
 	GameEvents.erase_requested.connect(_on_erase_requested)
 	
-	puzzle = SudokuGenerator.new().generate(GameManager.cur_difficulty)
+	# TODO: have loading screen appear or indication of puzzle generation
+	# make sure user can't pause/do anything if awaiting puzzle
+	puzzle = await PuzzlePool.get_puzzle_async(GameManager.cur_difficulty)
+	
 	await game_ui.setup(puzzle.player_board)
 	game_ui.num_input_requested.connect(_on_num_input_request)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and not puzzle.is_complete():
+	if event.is_action_pressed("pause") and puzzle != null and not puzzle.is_complete():
 		add_child(PAUSE_MENU.instantiate())
 
 

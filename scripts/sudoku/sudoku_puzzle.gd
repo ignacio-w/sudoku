@@ -5,6 +5,9 @@ var notes_board: Array[Array] # TODO: Array[Array[Array[int]]]
 var solution_board: Array[Array] ## The end goal of the player's board.
 var mistakes: int = 0 ## The number of mistakes the player has made.
 
+# TODO: add puzzle stats :)
+var difficulty
+var max_technique_tier
 
 ## Places num at the given position and clears any notes there, since a
 ## filled cell can't also hold pencil marks. This is the ONLY place

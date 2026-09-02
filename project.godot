@@ -23,6 +23,7 @@ config/icon="res://icon.svg"
 
 GameEvents="*uid://1wm2ll8q38d0"
 GameManager="*uid://c7ke7pqoh7mkd"
+PuzzlePool="*uid://deowb44ire2vr"
 
 [display]
 
