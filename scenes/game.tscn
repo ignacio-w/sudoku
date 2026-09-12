@@ -2,10 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://0g3di4a3b2w" path="res://scenes/ui/gameui.tscn" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://4h0h0n41iwd7" path="res://scenes/game.gd" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://6qbj3b87n4tg" path="res://scenes/ui/loading_screen.tscn" id="3_lnu2h"]
 
 [node name="Game" type="Node" unique_id=1876445565]
 script = ExtResource("1_yqjtg")
 
 [node name="GameUI" parent="." unique_id=1347157726 instance=ExtResource("1_uwrxv")]
+unique_name_in_owner = true
+
+[node name="LoadingScreen" parent="." unique_id=1784633054 instance=ExtResource("3_lnu2h")]
+unique_name_in_owner = true
 
 [node name="Timer" type="Timer" parent="." unique_id=1884300395]

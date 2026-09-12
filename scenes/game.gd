@@ -2,6 +2,7 @@ extends Node
 
 const PAUSE_MENU = preload("uid://csufm8nmtlviw")
 
+
 var puzzle: SudokuPuzzle
 var move_history: Array ## Each element in this array represents an action by
 ## the player. Each action is an Array of cell information that was modified
@@ -10,7 +11,8 @@ var move_history: Array ## Each element in this array represents an action by
 ## EX: [[{"position": (0, 0), "prev_value": 0, "prev_notes": []}, ...], ...]
 ## The first element represents the first move, the second the second move, etc.
 
-@onready var game_ui: GameUI = $GameUI
+@onready var game_ui: GameUI = %GameUI
+@onready var loading_screen: CanvasLayer = %LoadingScreen
 
 
 func _ready() -> void:
@@ -20,7 +22,11 @@ func _ready() -> void:
 	
 	# TODO: have loading screen appear or indication of puzzle generation
 	# make sure user can't pause/do anything if awaiting puzzle
+	if not PuzzlePool.has_ready_puzzle(GameManager.cur_difficulty):
+		loading_screen.show_loading()
+	
 	puzzle = await PuzzlePool.get_puzzle_async(GameManager.cur_difficulty)
+	loading_screen.hide_loading()
 	
 	await game_ui.setup(puzzle.player_board)
 	game_ui.num_input_requested.connect(_on_num_input_request)

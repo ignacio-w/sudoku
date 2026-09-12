@@ -20,6 +20,14 @@ func take_puzzle(difficulty: SudokuGenerator.Difficulty) -> SudokuPuzzle:
 	return puzzle  # null means the caller needs to show the loading screen and generate synchronously-on-thread
 
 
+## Returns true if a puzzle is already sitting in the pool for this
+## difficulty — i.e. get_puzzle_async() would return instantly, with no
+## wait, if called right now. Callers use this to decide whether a loading
+## screen is actually needed before requesting a puzzle.
+func has_ready_puzzle(difficulty: SudokuGenerator.Difficulty) -> bool:
+	return not _pools[difficulty].is_empty()
+
+
 ## Method to obtain a SudokuPuzzle. If one is available, returns the available
 ## one and generates more to refill the pool on a separate thread. If one is not available,
 ## waits for a puzzle with the correct difficulty to be generated and returns it once finished.
