@@ -49,6 +49,13 @@ theme_override_font_sizes/font_size = 48
 text = "Game Paused"
 horizontal_alignment = 1
 
+[node name="Difficulty" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1467755647]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Easy Mode"
+horizontal_alignment = 1
+
 [node name="Time" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1116827834]
 unique_name_in_owner = true
 layout_mode = 2
@@ -57,6 +64,7 @@ text = "0:00"
 horizontal_alignment = 1
 
 [node name="ContinueButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1849992134]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Continue"

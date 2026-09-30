@@ -32,8 +32,9 @@ func has_ready_puzzle(difficulty: SudokuGenerator.Difficulty) -> bool:
 ## one and generates more to refill the pool on a separate thread. If one is not available,
 ## waits for a puzzle with the correct difficulty to be generated and returns it once finished.
 func get_puzzle_async(difficulty: SudokuGenerator.Difficulty) -> SudokuPuzzle:
+	var puzzle: SudokuPuzzle
 	if not _pools[difficulty].is_empty():
-		var puzzle: SudokuPuzzle = _pools[difficulty].pop_front()
+		puzzle = _pools[difficulty].pop_front()
 		_refill(difficulty)
 		return puzzle
 	
@@ -47,7 +48,7 @@ func get_puzzle_async(difficulty: SudokuGenerator.Difficulty) -> SudokuPuzzle:
 			continue
 	
 	# Return generated puzzle
-	var puzzle: SudokuPuzzle = _pools[difficulty].pop_front()
+	puzzle = _pools[difficulty].pop_front()
 	_refill(difficulty)
 	return puzzle
 

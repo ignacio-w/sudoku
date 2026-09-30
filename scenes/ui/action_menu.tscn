@@ -5,6 +5,7 @@
 [node name="ActionMenu" type="VBoxContainer" unique_id=1028946684]
 offset_right = 150.0
 offset_bottom = 31.0
+focus_mode = 2
 script = ExtResource("1_lbdf6")
 
 [node name="ActionBar" type="HBoxContainer" parent="." unique_id=1832336150]
@@ -14,16 +15,21 @@ alignment = 1
 [node name="UndoButton" type="Button" parent="ActionBar" unique_id=6699536]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 text = "Undo"
 
 [node name="EraseButton" type="Button" parent="ActionBar" unique_id=400871370]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_bottom = NodePath(".")
 text = "Erase"
 
 [node name="HintButton" type="Button" parent="ActionBar" unique_id=341243750]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
 text = "Hint"
 
 [node name="Hints" type="Label" parent="." unique_id=2108062243]
@@ -32,6 +38,7 @@ layout_mode = 2
 text = "Hints left: X"
 horizontal_alignment = 1
 
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="pressed" from="ActionBar/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="ActionBar/EraseButton" to="." method="_on_erase_button_pressed"]
 [connection signal="pressed" from="ActionBar/HintButton" to="." method="_on_hint_button_pressed"]

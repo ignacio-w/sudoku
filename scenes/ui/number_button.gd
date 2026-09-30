@@ -43,6 +43,7 @@ func set_inactive(inactive: bool = true):
 	is_enabled = not inactive
 	if is_enabled:
 		number_label.remove_theme_color_override("font_color")
+		if is_note_button: number_label.add_theme_color_override("font_color", Color("242424"))
 	else:
 		number_label.add_theme_color_override("font_color", Color.DIM_GRAY)
 

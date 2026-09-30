@@ -42,11 +42,11 @@ static func find_empty_cell(sudoku_board: Array[Array]) -> Vector2i:
 
 ## Finds the empty cell with the FEWEST legal candidates. Trying the most
 ## constrained cell first means backtracking fails fast on dead branches
-## instead of wandering deep into unproductive ones.
+## instead of wandering deep into unproductive ones (MRV heuristic).
 static func find_most_constrained_cell(sudoku_board: Array[Array]) -> Vector2i:
 	var best_pos := Vector2i(-1, -1)
 	var best_count := 10  # more than any real candidate count
-
+	
 	for row in range(9):
 		for col in range(9):
 			if sudoku_board[row][col] != 0:
@@ -101,11 +101,12 @@ static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
 		return []
 	
 	var used := 0
-	# used = 000000000
-	# Each digit represents numbers 1-9; if found in row/col; turn digit to 1
+	# ints are 64 bits in GDScript, we will only use first 9 (used = 000000000)
+	# Each bit represents numbers 1-9; if found in row/col: turn digit to 1
+	# Bitwise OR assignment (|=): 001010000 |= 000000001 => 001010001
 	for i in range(9):
 		if board[row][i] != 0:
-			used |= 1 << (board[row][i] - 1)
+			used |= 1 << (board[row][i] - 1) 
 		if board[i][col] != 0:
 			used |= 1 << (board[i][col] - 1)
 	
@@ -122,7 +123,10 @@ static func get_candidates(board: Array[Array], pos: Vector2i) -> Array[int]:
 	
 	var candidates: Array[int] = []
 	for num in range(1, 10):
-		# Candidate if bit is not set (0)
+		# Bitwise AND (&): if both bits are 1 in same pos, leaves 1 else 0
+		# Bit is OFF in used, then is candidate:
+		# ex (used= 1,4,5,8,9; check: 4): 110011001 & 000001000 => 000001000 != 0 so ISN'T candidate
+		# ex (used= 1,4,5,8,9; check: 3): 110011001 & 000000100 => 000000000 == 0 so IS candidate
 		if (used & 1 << (num - 1)) == 0:
 			candidates.append(num)
 	return candidates

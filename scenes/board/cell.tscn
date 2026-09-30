@@ -25,6 +25,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_yh0nt")
 script = ExtResource("1_yh0nt")
 
@@ -149,4 +150,6 @@ label_settings = SubResource("LabelSettings_yh0nt")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

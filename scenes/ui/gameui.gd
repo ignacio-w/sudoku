@@ -10,13 +10,30 @@ var notes_mode: bool
 @onready var number_selector: GridContainer = %NumberSelector
 @onready var mistake_label: Label = %Mistakes
 @onready var stopwatch: Stopwatch = %Stopwatch
+@onready var notes_toggle: CheckButton = %NotesToggle
+@onready var action_menu: VBoxContainer = %ActionMenu
 
+
+var _last_focused_cell: Cell
 
 func _ready() -> void:
 	mistake_label.text = "Mistakes: 0"
 	for child in number_selector.get_children():
 		child.queue_free()
 
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_released("toggle_notes"):
+		notes_toggle.button_pressed = !notes_toggle.button_pressed
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_focus_next"):
+		var focus_owner = get_viewport().gui_get_focus_owner()
+		if focus_owner is not Cell:
+			if _last_focused_cell:
+				_last_focused_cell.grab_focus()
+		else:
+			_last_focused_cell = get_viewport().gui_get_focus_owner()
+			assert(_last_focused_cell is Cell)
 
 
 ## Sets up all visual nodes. Creates a visual Sudoku board given a 2D array of
@@ -36,8 +53,15 @@ func setup(board_array: Array[Array]):
 		num_button.number_button_clicked.connect(_on_num_button_clicked)
 	
 	await board.create_visual_board(board_array)
+	for row in board.cell_grid:
+		for cell: Cell in row:
+			cell.focus_next = action_menu.get_path()
+			cell.focus_previous = action_menu.get_path()
+	
+	board.focus()
+	action_menu.focus_entered.connect(_on_action_menu_focused)
 	update_number_buttons_active_state()
-	stopwatch.start(3)
+	stopwatch.start()
 
 
 ## Sets the mistake counter to the parameter.
@@ -59,6 +83,11 @@ func update_number_buttons_active_state() -> void:
 			number_selector.get_children()[num - 1].set_inactive()
 		else:
 			number_selector.get_children()[num - 1].set_inactive(false)
+
+## TODO: Pass reference to last focused cell
+func _on_action_menu_focused():
+	pass
+	#action_menu.set_tab_focus()
 
 
 ## Receives the number button clicked signal from number buttons. The argument

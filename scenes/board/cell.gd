@@ -58,18 +58,22 @@ func _ready() -> void:
 	cell_styles["default"] = get_theme_stylebox("panel")
 	number_label.show()
 	notes_container.hide()
+	focus_mode = Control.FOCUS_ALL
 	for label: Label in notes_container.get_children():
 		label.modulate = Color.TRANSPARENT
 
 
 ## Called when the cell recieves an input event (mouse enter, click, etc.)
-func _on_gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_select"):
-		print("cell clicked with value ", number_label.text, " and is clue: ", is_clue)
-		emit_clicked_signal()
+#func _on_gui_input(event: InputEvent) -> void:
+	#if event.is_action_pressed("ui_select"):
+		#print("cell clicked with value ", number_label.text, " and is clue: ", is_clue)
+		#grab_focus()
+		##emit_clicked_signal()
 
 
-func emit_clicked_signal(input_validation: bool = true, set_focused := false) -> void:
+## TODO: Fix highlighting with new focus. When clicking highlighted cell, should unhighlight
+
+func emit_clicked_signal(input_validation := true, set_focused := false) -> void:
 	# Cells that aren't clues can be SELECTED (filled)
 	# NOTICE: Behavior below assumes inputs are validated
 	if input_validation:
@@ -80,7 +84,7 @@ func emit_clicked_signal(input_validation: bool = true, set_focused := false) ->
 				cell_cleared.emit()
 		# Cells that are clues can ONLY be highlighted
 		else:
-			if state != CellState.EQUAL_HIGHLIGHT and state != CellState.SELECTED or set_focused:
+			if state != CellState.EQUAL_HIGHLIGHT or set_focused:
 				cell_highlighted.emit(self)
 			else:
 				cell_cleared.emit()
@@ -178,3 +182,14 @@ func set_state(cell_state: CellState = CellState.DEFAULT) -> void:
 			else:
 				add_theme_stylebox_override("panel", cell_styles["note_highlight"])
 			state = CellState.EQUAL_HIGHLIGHT
+
+
+func _on_focus_entered() -> void:
+	print("focus entered on me: " + str(board_pos))
+	emit_clicked_signal()
+
+
+func _on_focus_exited() -> void:
+	return
+	print("focus exited on me: " + str(board_pos))
+	emit_clicked_signal()

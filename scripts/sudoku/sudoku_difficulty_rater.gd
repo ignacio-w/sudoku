@@ -34,8 +34,9 @@ func _is_solved(board: Array[Array]) -> bool:
 	return SudokuRules.find_empty_cell(board) == Vector2i(-1, -1)
 
 
-## Creates the initial candidate grid straight from the board's placed values.
-func _create_init_candidates(board: Array[Array]) -> Array[Array]:
+## Creates and returns a candidate grid straight from the board's placed values.
+## The candidate grid is a 3D array of ints.
+func _get_candidate_grid(board: Array[Array]) -> Array[Array]:
 	var candidates: Array[Array] = []
 	candidates.resize(9)
 	for row in range(9):
@@ -87,14 +88,14 @@ func _place_value(board: Array[Array], candidates: Array[Array], row: int, col: 
 		candidates[pos.x][pos.y].erase(num)
 
 
-## Rates the difficulty of the given board. Returns the highest tier of
-## technique that was ever required to solve the board humanly, or
+## Rates the difficulty of the given board. Difficulty is determined by the 
+## highest tier of technique that was ever required for a full logical solve, or
 ## Tier.UNSOLVABLE_LOGICALLY if the board couldn't be fully solved only using
 ## the implemented technqiues. This does NOT modify the board passed in.
 ## TODO: Add implementation
 func rate(board: Array[Array]) -> Tier:
 	var working_board := board.duplicate(true)
-	var candidates := _create_init_candidates(working_board)
+	var candidates := _get_candidate_grid(working_board)
 	var highest_tier_used := Tier.SINGLES
 	
 	while not _is_solved(working_board):

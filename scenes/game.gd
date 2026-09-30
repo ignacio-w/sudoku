@@ -34,7 +34,11 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and puzzle != null and not puzzle.is_complete():
-		add_child(PAUSE_MENU.instantiate())
+		var focused_control_before_pause = get_viewport().gui_get_focus_owner()
+		var menu := PAUSE_MENU.instantiate()
+		if focused_control_before_pause:
+			menu.tree_exited.connect(func(): focused_control_before_pause.grab_focus())
+		add_child(menu)
 
 
 ## Places the specified number in the specified cell. Updates notes across
@@ -63,8 +67,9 @@ func _place_num(input_cell: Cell, num: int) -> void:
 			var note_cell: Cell = game_ui.board.cell_grid[pos.x][pos.y]
 			note_cell.display_notes(puzzle.get_notes(pos)) # Update display
 	
-	# Update highlighting
-	input_cell.cell_highlighted.emit(input_cell)
+	# Focus cell
+	input_cell.release_focus()
+	input_cell.grab_focus()
 	
 	# Check if the player has won
 	if puzzle.is_complete():
@@ -146,7 +151,7 @@ func _on_undo_requested() -> void:
 		cell.display_notes(entry.prev_notes)
 	
 	# Focus undone cell; update UI buttons
-	game_ui.board.focus_cell(undone_cell)
+	undone_cell.grab_focus()
 	game_ui.update_number_buttons_active_state()
 
 
@@ -179,7 +184,7 @@ func _on_erase_requested() -> void:
 	puzzle.set_value(cell.board_pos, 0)
 	cell.display_value(0)
 	cell.display_notes([])
-	game_ui.board.focus_cell(cell)
+	cell.grab_focus()
 	game_ui.update_number_buttons_active_state()
 
 

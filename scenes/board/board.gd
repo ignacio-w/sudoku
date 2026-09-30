@@ -7,7 +7,7 @@ class_name BoardUI extends PanelContainer
 const CELL = preload("uid://dbdear076ofrm")
 const SUB_GRID = preload("uid://csn5uij01jy01")
 var cell_grid: Array[Array] # 2D Array of cell refrences
-var focused_cell: Cell # The last cell currently highlighted and clicked on by user
+var focused_cell: Cell # The last cell interacted with by the user
 
 func _ready() -> void:
 	clear()
@@ -58,9 +58,9 @@ func get_subgrid_index(pos: Vector2i) -> int:
 	return (pos.x / 3) * 3 + (pos.y / 3)
 
 
-## Updates all cell states based on the current focused state.
-func focus_cell(cell: Cell) -> void:
-	cell.emit_clicked_signal(GameManager.validate_inputs, true)
+## Focuses the first cell in the grid
+func focus() -> void:
+	(cell_grid[0][0] as Cell).grab_focus()
 
 
 ## Receives the cell selected signal from board cells and updates all other cells as
@@ -113,25 +113,26 @@ func _on_cell_highlighted(highlighted_cell: Cell) -> void:
 ## Handles keyboard navigation of the board.
 func _unhandled_key_input(event: InputEvent) -> void:
 	if focused_cell == null or event.is_released(): return
-	var row: int = focused_cell.board_pos.x
-	var col: int = focused_cell.board_pos.y
-	var new_row: int = row
-	var new_col: int = col
-	
-	# Find next cell
-	if event.is_action("ui_right"):
-		if col < 8: new_col += 1
-	if event.is_action("ui_left"):
-		if col > 0: new_col -= 1
-	if event.is_action("ui_down"):
-		if row < 8: new_row += 1
-	if event.is_action("ui_up"):
-		if row > 0: new_row -= 1
-	
-	# If action results in new focused cell, focus cell and set input as handled
-	if focused_cell.board_pos != Vector2i(new_row, new_col):
-		(cell_grid[new_row][new_col] as Cell).emit_clicked_signal()
-		get_viewport().set_input_as_handled()
+	#var row: int = focused_cell.board_pos.x
+	#var col: int = focused_cell.board_pos.y
+	#var new_row: int = row
+	#var new_col: int = col
+	#
+	## Find next cell
+	#if event.is_action("ui_right"):
+		#if col < 8: new_col += 1
+	#if event.is_action("ui_left"):
+		#if col > 0: new_col -= 1
+	#if event.is_action("ui_down"):
+		#if row < 8: new_row += 1
+	#if event.is_action("ui_up"):
+		#if row > 0: new_row -= 1
+	#
+	## If action results in new focused cell, focus cell and set input as handled
+	#if focused_cell.board_pos != Vector2i(new_row, new_col):
+		##(cell_grid[new_row][new_col] as Cell).emit_clicked_signal()
+		#(cell_grid[new_row][new_col] as Cell).call_deferred("grab_focus")
+		#get_viewport().set_input_as_handled()
 
 
 ## Resets the highlighting of all cells in the grid.

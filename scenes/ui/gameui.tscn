@@ -115,11 +115,13 @@ horizontal_alignment = 1
 script = ExtResource("4_bmdha")
 
 [node name="NotesToggle" type="CheckButton" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=139291243]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Notes Mode"
 
 [node name="ActionMenu" parent="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer" unique_id=1028946684 instance=ExtResource("6_n64n4")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="toggled" from="MarginContainer/HBoxContainer/ExtraPanelContainer/MarginContainer/VBoxContainer/NotesToggle" to="." method="_on_notes_toggle_toggled"]
