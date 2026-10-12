@@ -12,7 +12,6 @@ A Sudoku game built in Godot 4.6 (GDScript) with a puzzle generator that rates d
 - Undo (including notes cleared as a side effect), erase, and hint
 - Pause menu with a blurred board, so the puzzle can't be studied while the timer is stopped
 - Mistake counter and stopwatch
-- Keyboard navigation: arrow keys move within the board, Tab moves between the board and the action buttons
 - Puzzles are generated on a background thread and pooled ahead of time, with a loading screen as a fallback
 
 ## How difficulty works
@@ -74,6 +73,7 @@ godot --headless --path . -s benchmark.gd
 
 ## Roadmap
 
+- Keyboard navigation: arrow keys move within the board, Tab moves between the board and the action buttons
 - Daily streak counter
 - Settings screen and themes
 - Tutorial lessons that teach each solving technique
