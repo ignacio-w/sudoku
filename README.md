@@ -2,7 +2,7 @@
 
 A Sudoku game built in Godot 4.6 (GDScript) with a puzzle generator that rates difficulty by the logical techniques a human would need to solve it, instead of by clue count.
 
-**Play it:** [https://nachoc.itch.io/sudoku](url)
+**Play it:** <https://nachoc.itch.io/sudoku>
 
 ## Features
 
