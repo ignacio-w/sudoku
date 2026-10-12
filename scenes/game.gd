@@ -11,6 +11,7 @@ var move_history: Array ## Each element in this array represents an action by
 ## EX: [[{"position": (0, 0), "prev_value": 0, "prev_notes": []}, ...], ...]
 ## The first element represents the first move, the second the second move, etc.
 
+
 @onready var game_ui: GameUI = %GameUI
 @onready var loading_screen: CanvasLayer = %LoadingScreen
 
@@ -71,7 +72,7 @@ func _place_num(input_cell: Cell, num: int) -> void:
 		print("Board complete! Ending game...")
 		game_ui.stopwatch.stop()
 		await get_tree().create_timer(3).timeout
-		get_tree().quit()
+		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 
 
 ## Returns information about the cells at the specified positions in the form
