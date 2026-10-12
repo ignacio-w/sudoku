@@ -59,7 +59,7 @@ func request_refill(difficulty: SudokuGenerator.Difficulty) -> void:
 
 ## Generates SudokuPuzzles for the given difficulty on a separate thread until the number of puzzles
 ## specified in _pool_target has been reached. If no more puzzles need to be generated, no action
-## will  occur. If a puzzle of the given difficulty is already attempting to generate, a new
+## will occur. If a puzzle of the given difficulty is already attempting to generate, a new
 ## one will not start until the current one finishes.
 func _refill(difficulty: SudokuGenerator.Difficulty) -> void:
 	if _pools[difficulty].size() >= _pool_target or _generating.get(difficulty, false):
@@ -69,8 +69,11 @@ func _refill(difficulty: SudokuGenerator.Difficulty) -> void:
 	thread.start(_generate_for_pool.bind(difficulty, thread))
 
 
-## Calls the method to generate a Sudoku Puzzle with a given difficulty on the given thread, then
-## calls _on_pool_puzzle_ready() on the main thread using call_deffered().
+## Calls the method to generate a SudokuPuzzle for the given difficulty pool, then
+## defers a call to _on_pool_puzzle_ready for the main thread to handle.
+## INFO: This method is intended to only be called by a background thread (not main).
+## The thread should pass itself into the function so the main thread can safely
+## destroy it once it has generated a puzzle.
 func _generate_for_pool(difficulty: SudokuGenerator.Difficulty, thread: Thread) -> void:
 	var puzzle := SudokuGenerator.new().generate(difficulty)
 	_on_pool_puzzle_ready.call_deferred(difficulty, puzzle, thread) # calls on main thread

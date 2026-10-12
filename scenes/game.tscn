@@ -12,5 +12,6 @@ unique_name_in_owner = true
 
 [node name="LoadingScreen" parent="." unique_id=1784633054 instance=ExtResource("3_lnu2h")]
 unique_name_in_owner = true
+visible = false
 
 [node name="Timer" type="Timer" parent="." unique_id=1884300395]

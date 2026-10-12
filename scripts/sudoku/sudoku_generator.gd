@@ -56,7 +56,7 @@ func _min_clues_for(difficulty: Difficulty) -> int:
 ## to generate the board multiple times until the difficulty is met.
 ## TODO: Medium/hard difficulty takes a while to generate. Improve generation
 ## speed.
-func generate(difficulty: Difficulty = Difficulty.EASY) -> SudokuPuzzle:
+func generate(difficulty: Difficulty) -> SudokuPuzzle:
 	var min_tier := _min_tier_for(difficulty)
 	var max_solution_attempts := 3 # how many different solution boards to try
 	var max_attempts := 50 # how many removal attempts to try per board
@@ -75,20 +75,19 @@ func generate(difficulty: Difficulty = Difficulty.EASY) -> SudokuPuzzle:
 			var tier := rater.rate(puzzle.player_board)
 			
 			_time += Time.get_ticks_msec() - _init_time
-			print("Took %dms to generate a puzzle #%d." % [Time.get_ticks_msec() - _init_time, attempt])
+			print("[%s:%d]: Took %dms to generate" % [SudokuGenerator.Difficulty.keys()[difficulty], attempt + 1, Time.get_ticks_msec() - _init_time])
 			
 			# Puzzle meets difficulty criteria; finished
 			if tier >= min_tier:
-				print("\nReached min target on attempt %d" % (attempt + 1))
+				print("Reached difficulty criteria for a %s board!" % SudokuGenerator.Difficulty.keys()[difficulty])
 				#_successes += 1
-				print("Avg time per puzzle gen: %f" % ((_time / float(max_attempts)) / 1000.0))
-				print("Total time elapsed: %.3fs\n\n" % (_time / 1000.0))
+				print("Avg gen time: %.0fms" % ((_time / float(max_attempts))))
+				print("Total time: %.3fs\n" % (_time / 1000.0))
 				return puzzle
-			print()
 	
 	# Puzzle failed to meet difficulty criteria, return last puzzle generated
-	print("Total time elapsed: %.2fs" % (_time / 1000.0))
 	push_warning("Couldn't reach minimum difficuly after %d attempts; returning last attempt." % (max_attempts * max_solution_attempts))
+	print("Failed to reach difficulty! Total time elapsed: %.2fs" % (_time / 1000.0))
 	return puzzle
 
 
@@ -164,10 +163,48 @@ func _attempt_create_puzzle(solution_board: Array[Array], difficulty: Difficulty
 		actual_max_tier_used = max(rating, actual_max_tier_used)
 		clues -= 1
 		
-	print("Level ", str(difficulty), " board generated with ", str(clues), " clues.")
-	print("Most difficult technique used: " + str(actual_max_tier_used))
-	print("Failed %d times before succesful generation." % failures)
+	# print("Attempted Level ", str(difficulty), " board with ", str(clues), " clues.")
+	# print("Most difficult technique used: " + str(actual_max_tier_used))
+	# print("Failed %d times before succesful generation." % failures)
 	puzzle.player_board = board
 	puzzle.solution_board = solution_board.duplicate(true)
 	
 	return puzzle
+
+
+## For testing only
+func generate_testing(difficulty: Difficulty) -> Array:
+	var min_tier := _min_tier_for(difficulty)
+	var max_solution_attempts := 3 # how many different solution boards to try
+	var max_attempts := 50 # how many removal attempts to try per board
+	var _time = 0
+	
+	var puzzle: SudokuPuzzle
+	# Create a new solution board up to max_solution_attempts if hard board couldn't be generated
+	for solution_attempt in range(max_solution_attempts):
+		var solution_board := _build_solution_board()
+		
+		# Attempt to remove clues to create a puzzle up to max_attempts times
+		for attempt in range(max_attempts):
+			var _init_time := Time.get_ticks_msec()
+			
+			puzzle = _attempt_create_puzzle(solution_board, difficulty)
+			var tier := rater.rate(puzzle.player_board)
+			
+			_time += Time.get_ticks_msec() - _init_time
+			# print("[%d]: Took %dms to generate" % [attempt + 1, Time.get_ticks_msec() - _init_time])
+			printraw("[%d]: Took %dms to generate" % [attempt + 1, Time.get_ticks_msec() - _init_time])
+			
+			# Puzzle meets difficulty criteria; finished
+			if tier >= min_tier:
+				print()
+				print("Reached difficulty criteria for a %s board!" % SudokuGenerator.Difficulty.keys()[difficulty])
+				#_successes += 1
+				print("Avg gen time: %.0fms" % ((_time / float(attempt + 1))))
+				print("Total time: %.3fs\n" % (_time / 1000.0))
+				return [puzzle, attempt + 1, false]
+	
+	# Puzzle failed to meet difficulty criteria, return last puzzle generated
+	push_warning("Couldn't reach minimum difficuly after %d attempts; returning last attempt." % (max_attempts * max_solution_attempts))
+	print("Failed to reach difficulty! Total time elapsed: %.3fs" % (_time / 1000.0))
+	return [puzzle, max_attempts, true]
